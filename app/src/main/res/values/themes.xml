@@ -11,6 +11,21 @@
 
     <style name="Theme.ATLAS" parent="Base.Theme.ATLAS" />
 
+    <!-- Chips de selección única (objetivo fitness) en naranja -->
+    <style name="Atlas.Chip.Choice" parent="Widget.Material3.Chip.Filter">
+        <item name="chipBackgroundColor">@color/chip_goal_bg</item>
+        <item name="chipStrokeColor">@color/chip_goal_stroke</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="android:textColor">@color/chip_goal_text</item>
+        <item name="checkedIconTint">@color/accent_orange</item>
+        <item name="rippleColor">@color/accent_orange_glow</item>
+    </style>
+
+    <!-- Píldora del ítem activo del BottomNavigationView en naranja -->
+    <style name="Atlas.BottomNav.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/accent_orange_glow</item>
+    </style>
+
     <!-- Campos de texto Material 3 adaptados a la paleta oscura de ATLAS -->
     <style name="Atlas.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
         <item name="boxBackgroundColor">@color/surface_input</item>

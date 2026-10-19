@@ -42,6 +42,18 @@
                 android:textSize="13sp"
                 tools:text="Pecho, Hombro y Tríceps" />
 
+            <!-- Primeros ejercicios del bloque; oculto si la rutina está vacía -->
+            <TextView
+                android:id="@+id/tvRoutineExercises"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@color/text_muted"
+                android:textSize="12sp"
+                tools:text="Press de Banca Plano • Press Inclinado con Mancuernas • Press Militar con Barra…" />
+
             <TextView
                 android:id="@+id/tvRoutineMetrics"
                 android:layout_width="wrap_content"

@@ -22,6 +22,7 @@
         android:background="@color/surface_dark"
         android:elevation="8dp"
         app:elevation="8dp"
+        app:itemActiveIndicatorStyle="@style/Atlas.BottomNav.ActiveIndicator"
         app:itemIconTint="@color/bottom_nav_colors"
         app:itemTextColor="@color/bottom_nav_colors"
         app:labelVisibilityMode="labeled"

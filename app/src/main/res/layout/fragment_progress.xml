@@ -82,12 +82,15 @@
                         app:cornerRadius="22dp"
                         app:strokeColor="@color/surface_card_stroke" />
 
+                    <!-- Clicable: abre el diálogo para escribir el peso exacto -->
                     <TextView
                         android:id="@+id/tvCurrentWeight"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:background="?attr/selectableItemBackground"
                         android:gravity="center"
+                        android:paddingVertical="4dp"
                         android:textColor="@color/text_primary"
                         android:textSize="32sp"
                         android:textStyle="bold"
@@ -109,6 +112,28 @@
                         app:cornerRadius="22dp"
                         app:strokeColor="@color/surface_card_stroke" />
                 </LinearLayout>
+
+                <!-- Mensaje dinámico de distancia a la meta -->
+                <TextView
+                    android:id="@+id/tvWeightToGoal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center"
+                    android:textColor="@color/accent_orange"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    tools:text="Estás a 4.8 kg de tu meta" />
+
+                <TextView
+                    android:id="@+id/tvWeightEditHint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:gravity="center"
+                    android:text="@string/profile_edit_hint"
+                    android:textColor="@color/text_muted"
+                    android:textSize="11sp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnSaveWeight"

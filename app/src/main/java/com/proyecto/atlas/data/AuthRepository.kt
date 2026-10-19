@@ -61,6 +61,20 @@ object AuthRepository {
     /** Usuario con sesión activa, o null si nadie ha iniciado sesión. */
     fun getCurrentUser(): User? = currentUser
 
+    /**
+     * Actualiza el peso meta y el objetivo fitness del usuario en sesión.
+     * Devuelve false si no hay nadie autenticado.
+     */
+    fun updateGoals(targetWeight: Double, goal: String): Boolean {
+        val user = currentUser ?: return false
+        val updated = user.copy(targetWeight = targetWeight, goal = goal)
+
+        val index = users.indexOfFirst { it.id == user.id }
+        if (index >= 0) users[index] = updated
+        currentUser = updated
+        return true
+    }
+
     /** Cierra la sesión activa. */
     fun logout() {
         currentUser = null

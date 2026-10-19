@@ -1,16 +1,24 @@
 package com.proyecto.atlas.fragment
 
+import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.proyecto.atlas.R
+import com.proyecto.atlas.data.AuthRepository
 import com.proyecto.atlas.data.MetricsRepository
+import com.proyecto.atlas.databinding.DialogEditWeightBinding
 import com.proyecto.atlas.databinding.FragmentProgressBinding
 import com.proyecto.atlas.databinding.ItemWeightLogBinding
 import java.util.Locale
+import kotlin.math.absoluteValue
 
 /** Pestaña "Progreso": registro rápido de peso corporal e hidratación del día. */
 class ProgressFragment : Fragment() {
@@ -53,6 +61,8 @@ class ProgressFragment : Fragment() {
             renderWeight()
         }
 
+        binding.tvCurrentWeight.setOnClickListener { showExactWeightDialog() }
+
         binding.btnSaveWeight.setOnClickListener {
             MetricsRepository.updateWeight(draftWeight)
             renderHistory()
@@ -81,9 +91,66 @@ class ProgressFragment : Fragment() {
         }
     }
 
+    /** Diálogo con teclado numérico para escribir el peso exacto. */
+    private fun showExactWeightDialog() {
+        val dialog = Dialog(requireContext())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+
+        val dialogBinding = DialogEditWeightBinding.inflate(layoutInflater)
+        dialog.setContentView(dialogBinding.root)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        dialogBinding.etExactWeight.setText(formatWeight(draftWeight))
+        dialogBinding.etExactWeight.setSelection(
+            dialogBinding.etExactWeight.text?.length ?: 0
+        )
+
+        dialogBinding.btnCancelExactWeight.setOnClickListener { dialog.dismiss() }
+
+        dialogBinding.btnApplyExactWeight.setOnClickListener {
+            val raw = dialogBinding.etExactWeight.text?.toString()?.trim().orEmpty()
+            val value = raw.replace(',', '.').toDoubleOrNull()
+
+            if (value == null || value < MIN_WEIGHT || value > MAX_WEIGHT) {
+                dialogBinding.tilExactWeight.error =
+                    getString(R.string.goals_error_invalid_target)
+                return@setOnClickListener
+            }
+
+            draftWeight = value
+            renderWeight()
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
     private fun renderWeight() {
         binding.tvCurrentWeight.text =
             getString(R.string.progress_weight_value, formatWeight(draftWeight))
+        renderDistanceToGoal()
+    }
+
+    /** Mensaje dinámico con la distancia al peso meta del usuario. */
+    private fun renderDistanceToGoal() {
+        val targetWeight = AuthRepository.getCurrentUser()?.targetWeight
+
+        if (targetWeight == null) {
+            binding.tvWeightToGoal.setText(R.string.progress_no_goal)
+            return
+        }
+
+        val difference = targetWeight - draftWeight
+        binding.tvWeightToGoal.text = when {
+            difference.absoluteValue < GOAL_TOLERANCE ->
+                getString(R.string.progress_goal_reached)
+
+            difference < 0 ->
+                getString(R.string.progress_to_goal_lose, formatWeight(difference.absoluteValue))
+
+            else ->
+                getString(R.string.progress_to_goal_gain, formatWeight(difference))
+        }
     }
 
     private fun renderWater() {
@@ -100,11 +167,17 @@ class ProgressFragment : Fragment() {
         binding.btnPlusWater.isEnabled = glasses < MetricsRepository.WATER_GOAL
     }
 
-    /** Infla las filas del historial de pesajes dentro de la tercera tarjeta. */
+    /**
+     * Infla las filas del historial. El listado va del más reciente al más antiguo,
+     * así que cada fila se compara con la siguiente para mostrar su variación.
+     */
     private fun renderHistory() {
         binding.layoutWeightHistory.removeAllViews()
 
-        MetricsRepository.getWeightHistory().forEach { (date, weightKg) ->
+        val history = MetricsRepository.getWeightHistory()
+        val targetWeight = AuthRepository.getCurrentUser()?.targetWeight
+
+        history.forEachIndexed { index, (date, weightKg) ->
             val rowBinding = ItemWeightLogBinding.inflate(
                 layoutInflater,
                 binding.layoutWeightHistory,
@@ -113,12 +186,43 @@ class ProgressFragment : Fragment() {
             rowBinding.tvLogDate.text = date
             rowBinding.tvLogWeight.text =
                 getString(R.string.progress_weight_value, formatWeight(weightKg))
+
+            val previousWeight = history.getOrNull(index + 1)?.second
+            if (previousWeight == null) {
+                rowBinding.tvLogDelta.visibility = View.GONE
+            } else {
+                val delta = weightKg - previousWeight
+                rowBinding.tvLogDelta.visibility = View.VISIBLE
+                rowBinding.tvLogDelta.text =
+                    getString(R.string.progress_delta, formatSignedWeight(delta))
+                rowBinding.tvLogDelta.setTextColor(deltaColor(delta, previousWeight, targetWeight))
+            }
+
             binding.layoutWeightHistory.addView(rowBinding.root)
         }
     }
 
+    /**
+     * Verde si el cambio acerca al peso meta y naranja si lo aleja: bajar de peso no
+     * siempre es la dirección deseada (depende del objetivo del usuario).
+     */
+    private fun deltaColor(delta: Double, previousWeight: Double, targetWeight: Double?): Int {
+        val colorRes = when {
+            targetWeight == null || delta == 0.0 -> R.color.text_secondary
+
+            (targetWeight - previousWeight).absoluteValue >
+                (targetWeight - (previousWeight + delta)).absoluteValue -> R.color.primary_neon
+
+            else -> R.color.accent_orange
+        }
+        return ContextCompat.getColor(requireContext(), colorRes)
+    }
+
     private fun formatWeight(weightKg: Double): String =
         String.format(Locale.US, "%.1f", weightKg)
+
+    private fun formatSignedWeight(delta: Double): String =
+        String.format(Locale.US, "%+.1f", delta)
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -134,6 +238,7 @@ class ProgressFragment : Fragment() {
         const val WEIGHT_STEP = 0.5
         const val MIN_WEIGHT = 30.0
         const val MAX_WEIGHT = 300.0
+        const val GOAL_TOLERANCE = 0.05
         const val STATE_DRAFT_WEIGHT = "draft_weight"
     }
 }

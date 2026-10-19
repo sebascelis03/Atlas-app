@@ -1,6 +1,7 @@
 package com.proyecto.atlas.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.proyecto.atlas.R
@@ -44,9 +45,28 @@ class RoutineAdapter(
                 routine.exerciseCount,
                 routine.estimatedMinutes
             )
+            bindExercisePreview(routine)
 
             binding.btnStartRoutine.setOnClickListener { onStartRoutine(routine) }
             binding.root.setOnClickListener { onStartRoutine(routine) }
         }
+
+        /** Muestra los primeros ejercicios separados por puntos, o nada si está vacía. */
+        private fun bindExercisePreview(routine: Routine) {
+            if (routine.exerciseNames.isEmpty()) {
+                binding.tvRoutineExercises.visibility = View.GONE
+                return
+            }
+
+            val preview = routine.exerciseNames.take(PREVIEW_LIMIT).joinToString(" • ")
+            val hasMore = routine.exerciseNames.size > PREVIEW_LIMIT
+
+            binding.tvRoutineExercises.visibility = View.VISIBLE
+            binding.tvRoutineExercises.text = if (hasMore) "$preview…" else preview
+        }
+    }
+
+    private companion object {
+        const val PREVIEW_LIMIT = 3
     }
 }

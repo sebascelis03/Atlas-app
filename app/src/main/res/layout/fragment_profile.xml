@@ -22,7 +22,7 @@
             android:layout_width="96dp"
             android:layout_height="96dp"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/bg_avatar_circle"
+            android:background="@drawable/bg_avatar_circle_orange"
             android:contentDescription="@string/profile_avatar_desc"
             android:gravity="center"
             android:textColor="@color/accent_orange"
@@ -96,15 +96,20 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- La meta es editable: abre el BottomSheet de metas -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardStatTarget"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
                 app:cardBackgroundColor="@color/surface_card"
                 app:cardCornerRadius="14dp"
                 app:cardElevation="0dp"
-                app:strokeColor="@color/surface_card_stroke"
+                app:rippleColor="@color/accent_orange_glow"
+                app:strokeColor="@color/accent_orange"
                 app:strokeWidth="1dp">
 
                 <LinearLayout
@@ -175,6 +180,20 @@
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
+        <!-- Total de entrenamientos completados -->
+        <TextView
+            android:id="@+id/tvTotalWorkouts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_input_field"
+            android:gravity="center"
+            android:paddingVertical="11dp"
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            tools:text="Total entrenamientos completados: 14" />
+
         <!-- Información de la cuenta -->
         <TextView
             android:layout_width="wrap_content"
@@ -201,20 +220,35 @@
                 android:orientation="vertical"
                 android:padding="18dp">
 
-                <!-- Objetivo -->
+                <!-- Objetivo: toda la fila abre el BottomSheet de metas -->
                 <LinearLayout
+                    android:id="@+id/rowProfileGoal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/profile_goal_label"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="14sp" />
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/profile_goal_label"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/profile_edit_hint"
+                            android:textColor="@color/text_muted"
+                            android:textSize="11sp" />
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/tvProfileGoal"

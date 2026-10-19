@@ -11,6 +11,12 @@ object MetricsRepository {
     /** Racha mock de días consecutivos entrenando; la comparten Inicio y Perfil. */
     const val RACHA_DIAS = 6
 
+    /** Entrenamientos completados en total (mock). */
+    const val TOTAL_ENTRENAMIENTOS = 14
+
+    /** Objetivos fitness disponibles para el perfil. */
+    val GOALS = listOf("Hipertrofia", "Fuerza", "Pérdida de Grasa")
+
     var pesoActual: Double = 74.8
         private set
 
