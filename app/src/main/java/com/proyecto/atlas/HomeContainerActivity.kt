@@ -1,5 +1,6 @@
 package com.proyecto.atlas
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -63,5 +64,20 @@ class HomeContainerActivity : AppCompatActivity() {
     /** Permite que un fragment salte a la pestaña de rutinas (ej. enlace "Ver todo"). */
     fun selectRoutinesTab() {
         binding.bottomNav.selectedItemId = R.id.nav_routines
+    }
+
+    /** MainActivity vuelve aquí al terminar un entrenamiento, pidiendo la pestaña Inicio. */
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+
+        if (intent.getBooleanExtra(EXTRA_SHOW_HOME, false)) {
+            binding.bottomNav.selectedItemId = R.id.nav_home
+        }
+    }
+
+    companion object {
+        /** Pide abrir directamente la pestaña Inicio. */
+        const val EXTRA_SHOW_HOME = "extra_show_home"
     }
 }

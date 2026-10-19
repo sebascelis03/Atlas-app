@@ -143,11 +143,11 @@
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
                     android:text="@string/progress_save_weight"
-                    android:textColor="@color/bg_dark"
+                    android:textColor="@color/white"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     app:backgroundTint="@color/accent_orange"
-                    app:cornerRadius="12dp" />
+                    app:cornerRadius="14dp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 

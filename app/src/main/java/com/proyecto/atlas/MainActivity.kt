@@ -1,12 +1,14 @@
 package com.proyecto.atlas
 
 import android.app.Dialog
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.SystemClock
 import android.view.View
+import android.view.ViewGroup
 import android.view.Window
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -20,6 +22,8 @@ import com.google.android.material.chip.Chip
 import com.proyecto.atlas.adapter.ExercisePickerAdapter
 import com.proyecto.atlas.adapter.WorkoutExerciseAdapter
 import com.proyecto.atlas.data.ExerciseRepository
+import com.proyecto.atlas.data.MetricsRepository
+import com.proyecto.atlas.data.RoutineRepository
 import com.proyecto.atlas.databinding.ActivityMainBinding
 import com.proyecto.atlas.databinding.BottomSheetExercisePickerBinding
 import com.proyecto.atlas.databinding.DialogWorkoutSummaryBinding
@@ -55,8 +59,38 @@ class MainActivity : AppCompatActivity() {
         setupWorkoutRecyclerView()
         setupRestTimerControls()
         setupButtons()
-        seedInitialSampleData()
+        loadSelectedRoutine()
         updateStats()
+    }
+
+    /**
+     * Carga la rutina elegida en la pestaña Rutinas. Si se entra sin rutina
+     * (ej. "Comenzar entrenamiento" desde Inicio) la sesión arranca vacía.
+     */
+    private fun loadSelectedRoutine() {
+        val routineId = intent.getStringExtra(EXTRA_ROUTINE_ID) ?: return
+        val routine = RoutineRepository.getRoutineById(routineId) ?: return
+
+        activeWorkout.title = routine.title
+        binding.tvWorkoutTitle.text = routine.title
+
+        // Los nombres de la rutina se resuelven contra el catálogo de ejercicios.
+        routine.exerciseNames.forEach { exerciseName ->
+            val exercise = ExerciseRepository.defaultExercises
+                .firstOrNull { it.name.equals(exerciseName, ignoreCase = true) }
+                ?: return@forEach
+
+            activeWorkout.workoutExercises.add(
+                WorkoutExercise(
+                    exercise = exercise,
+                    sets = MutableList(DEFAULT_SETS_PER_EXERCISE) { index ->
+                        WorkoutSet(index + 1, "-", 0.0, 0, false)
+                    }
+                )
+            )
+        }
+
+        workoutAdapter.notifyDataSetChanged()
     }
 
     private fun setupWorkoutTimer() {
@@ -90,36 +124,6 @@ class MainActivity : AppCompatActivity() {
         binding.btnFinishWorkout.setOnClickListener {
             showWorkoutSummaryDialog()
         }
-    }
-
-    private fun seedInitialSampleData() {
-        // Pre-cargar dos ejercicios comunes para que la vista se vea completa de inmediato
-        val benchPress = ExerciseRepository.defaultExercises.first { it.name.contains("Banca") }
-        val latPulldown = ExerciseRepository.defaultExercises.first { it.name.contains("Jalón") }
-
-        activeWorkout.workoutExercises.add(
-            WorkoutExercise(
-                exercise = benchPress,
-                sets = mutableListOf(
-                    WorkoutSet(1, "70 kg × 10", 70.0, 10, true),
-                    WorkoutSet(2, "80 kg × 8", 80.0, 8, false),
-                    WorkoutSet(3, "80 kg × 6", 80.0, 6, false)
-                )
-            )
-        )
-
-        activeWorkout.workoutExercises.add(
-            WorkoutExercise(
-                exercise = latPulldown,
-                sets = mutableListOf(
-                    WorkoutSet(1, "55 kg × 12", 55.0, 12, false),
-                    WorkoutSet(2, "60 kg × 10", 60.0, 10, false),
-                    WorkoutSet(3, "65 kg × 8", 65.0, 8, false)
-                )
-            )
-        )
-
-        workoutAdapter.notifyDataSetChanged()
     }
 
     private fun updateStats() {
@@ -278,14 +282,38 @@ class MainActivity : AppCompatActivity() {
 
         dialogBinding.btnDoneSummary.setOnClickListener {
             dialog.dismiss()
-            Toast.makeText(this, "¡Entrenamiento guardado con éxito!", Toast.LENGTH_SHORT).show()
+            finishWorkout()
         }
 
         dialog.show()
+
+        // Sin ancho explícito el Dialog se encoge al contenido y corta los textos.
+        val width = (resources.displayMetrics.widthPixels * DIALOG_WIDTH_RATIO).toInt()
+        dialog.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
+    }
+
+    /** Acredita el entrenamiento en las estadísticas y regresa a la pestaña Inicio. */
+    private fun finishWorkout() {
+        MetricsRepository.registrarEntrenamiento()
+        Toast.makeText(this, "¡Entrenamiento guardado con éxito!", Toast.LENGTH_SHORT).show()
+
+        val intent = Intent(this, HomeContainerActivity::class.java)
+        intent.putExtra(HomeContainerActivity.EXTRA_SHOW_HOME, true)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        startActivity(intent)
+        finish()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         restCountDownTimer?.cancel()
+    }
+
+    companion object {
+        /** Id de la rutina a entrenar; opcional. */
+        const val EXTRA_ROUTINE_ID = "extra_routine_id"
+
+        private const val DEFAULT_SETS_PER_EXERCISE = 3
+        private const val DIALOG_WIDTH_RATIO = 0.88
     }
 }

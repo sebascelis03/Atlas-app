@@ -52,7 +52,11 @@ class RoutinesFragment : Fragment() {
                 getString(R.string.routines_starting, routine.title),
                 Toast.LENGTH_SHORT
             ).show()
-            startActivity(Intent(requireContext(), MainActivity::class.java))
+
+            // MainActivity carga los ejercicios del bloque a partir de este id.
+            val intent = Intent(requireContext(), MainActivity::class.java)
+            intent.putExtra(MainActivity.EXTRA_ROUTINE_ID, routine.id)
+            startActivity(intent)
         }
 
         binding.rvRoutines.layoutManager = LinearLayoutManager(requireContext())

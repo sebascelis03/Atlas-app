@@ -35,9 +35,14 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         bindHeader()
-        bindWeeklyGoal()
         bindTodayExercises()
         setupButtons()
+    }
+
+    /** Las estadísticas se releen al volver (ej. tras terminar un entrenamiento). */
+    override fun onResume() {
+        super.onResume()
+        bindWeeklyGoal()
     }
 
     /** Fecha del día, saludo con el usuario autenticado y avatar con su inicial. */
@@ -54,15 +59,15 @@ class HomeFragment : Fragment() {
 
     /** Meta semanal y racha, calculadas a partir de las métricas registradas. */
     private fun bindWeeklyGoal() {
-        val completed = MetricsRepository.ENTRENAMIENTOS_SEMANA
+        val completed = MetricsRepository.entrenamientosSemana
         val goal = MetricsRepository.META_SEMANAL
-        val percent = if (goal > 0) completed * 100 / goal else 0
+        val percent = if (goal > 0) (completed * 100 / goal).coerceAtMost(100) else 0
 
         binding.progressWeeklyGoal.progress = percent
         binding.tvWeeklyGoalPercent.text = getString(R.string.home_weekly_goal_percent, percent)
         binding.tvWeeklyGoalDetail.text =
             getString(R.string.home_weekly_goal_detail, completed, goal)
-        binding.tvStreak.text = getString(R.string.home_streak, MetricsRepository.RACHA_DIAS)
+        binding.tvStreak.text = getString(R.string.home_streak, MetricsRepository.rachaDias)
     }
 
     /** Infla las filas de la rutina de hoy dentro de la tarjeta. */

@@ -72,6 +72,9 @@ object RoutineRepository {
     /** Lista de solo lectura con las rutinas disponibles. */
     fun getRoutines(): List<Routine> = routines.toList()
 
+    /** Busca una rutina por su id, o null si no existe. */
+    fun getRoutineById(id: String): Routine? = routines.firstOrNull { it.id == id }
+
     /** Agrega una rutina personalizada al final de la lista. */
     fun addRoutine(routine: Routine) {
         routines.add(routine)

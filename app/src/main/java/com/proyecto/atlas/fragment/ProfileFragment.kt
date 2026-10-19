@@ -40,11 +40,15 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        bindUser()
-
         binding.cardStatTarget.setOnClickListener { showEditGoalsSheet() }
         binding.rowProfileGoal.setOnClickListener { showEditGoalsSheet() }
         binding.btnLogout.setOnClickListener { showLogoutConfirmation() }
+    }
+
+    /** Los datos se releen al volver (ej. tras terminar un entrenamiento). */
+    override fun onResume() {
+        super.onResume()
+        bindUser()
     }
 
     private fun bindUser() {
@@ -73,10 +77,10 @@ class ProfileFragment : Fragment() {
             getString(R.string.progress_weight_unset)
         }
         binding.tvStatStreak.text =
-            getString(R.string.profile_stat_streak_value, MetricsRepository.RACHA_DIAS)
+            getString(R.string.profile_stat_streak_value, MetricsRepository.rachaDias)
         binding.tvTotalWorkouts.text = getString(
             R.string.profile_total_workouts,
-            MetricsRepository.TOTAL_ENTRENAMIENTOS
+            MetricsRepository.totalEntrenamientos
         )
 
         binding.tvProfileGoal.text = user?.goal?.takeIf { it.isNotBlank() } ?: DEFAULT_GOAL
