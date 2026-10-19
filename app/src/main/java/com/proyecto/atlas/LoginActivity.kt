@@ -90,7 +90,7 @@ class LoginActivity : AppCompatActivity() {
 
         val userName = AuthRepository.getCurrentUser()?.name.orEmpty()
         Toast.makeText(this, getString(R.string.login_success, userName), Toast.LENGTH_SHORT).show()
-        goToMain()
+        goToHome()
     }
 
     private fun validateFields(email: String, password: String): Boolean {
@@ -112,8 +112,8 @@ class LoginActivity : AppCompatActivity() {
         return isValid
     }
 
-    private fun goToMain() {
-        startActivity(Intent(this, MainActivity::class.java))
+    private fun goToHome() {
+        startActivity(Intent(this, HomeContainerActivity::class.java))
         finish()
     }
 }

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingHorizontal="18dp"
+    android:paddingVertical="12dp">
+
+    <ImageView
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:background="@drawable/bg_input_field"
+        android:contentDescription="@null"
+        android:padding="7dp"
+        android:src="@drawable/ic_fitness_center"
+        app:tint="@color/text_secondary" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvExerciseName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_primary"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            tools:text="Press de banca" />
+
+        <TextView
+            android:id="@+id/tvExerciseSets"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp"
+            tools:text="4 series × 8 reps" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/ivExerciseDone"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:contentDescription="@string/home_exercise_done_desc"
+        android:src="@drawable/ic_check"
+        android:visibility="gone"
+        app:tint="@color/accent_orange"
+        tools:visibility="visible" />
+
+</LinearLayout>

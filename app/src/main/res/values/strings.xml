@@ -45,4 +45,30 @@
     <string name="register_error_short_password">La contraseña debe tener al menos 6 caracteres</string>
     <string name="register_error_email_taken">Ese correo ya está registrado</string>
     <string name="register_success">¡Cuenta creada con éxito! Bienvenido</string>
+
+    <!-- Navegación inferior -->
+    <string name="nav_home">Inicio</string>
+    <string name="nav_routines">Rutinas</string>
+    <string name="nav_progress">Progreso</string>
+    <string name="nav_profile">Perfil</string>
+
+    <!-- Inicio (Dashboard) -->
+    <string name="home_greeting">Hola, %1$s</string>
+    <string name="home_default_user">Atleta</string>
+    <string name="home_avatar_desc">Avatar del usuario</string>
+    <string name="home_weekly_goal_title">Meta semanal</string>
+    <string name="home_weekly_goal_percent">%1$d%%</string>
+    <string name="home_weekly_goal_detail">%1$d de %2$d entrenamientos</string>
+    <string name="home_streak">🔥 Racha de %1$d días</string>
+    <string name="home_today_routine">Rutina de hoy • Empuje</string>
+    <string name="home_see_all">Ver todo</string>
+    <string name="home_start_workout">Comenzar entrenamiento</string>
+    <string name="home_sets_reps">%1$d series × %2$d reps</string>
+    <string name="home_exercise_done_desc">Ejercicio completado</string>
+
+    <!-- Pestañas pendientes -->
+    <string name="placeholder_routines">Aquí verás tus rutinas</string>
+    <string name="placeholder_progress">Aquí verás tu progreso</string>
+    <string name="placeholder_profile">Aquí verás tu perfil</string>
+    <string name="placeholder_coming_soon">Disponible muy pronto</string>
 </resources>

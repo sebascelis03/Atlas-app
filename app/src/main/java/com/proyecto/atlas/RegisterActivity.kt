@@ -95,9 +95,9 @@ class RegisterActivity : AppCompatActivity() {
             return
         }
 
-        // register() ya dejó la sesión abierta, así que entramos directo al entrenamiento.
+        // register() ya dejó la sesión abierta, así que entramos directo al dashboard.
         Toast.makeText(this, R.string.register_success, Toast.LENGTH_SHORT).show()
-        goToMain()
+        goToHome()
     }
 
     private fun validateFields(name: String, email: String, password: String): Boolean {
@@ -127,8 +127,8 @@ class RegisterActivity : AppCompatActivity() {
         return isValid
     }
 
-    private fun goToMain() {
-        val intent = Intent(this, MainActivity::class.java)
+    private fun goToHome() {
+        val intent = Intent(this, HomeContainerActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()
