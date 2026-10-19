@@ -66,8 +66,24 @@
     <string name="home_sets_reps">%1$d series × %2$d reps</string>
     <string name="home_exercise_done_desc">Ejercicio completado</string>
 
+    <!-- Rutinas -->
+    <string name="routines_title">Mis Rutinas</string>
+    <string name="routines_create">+ Nueva Rutina</string>
+    <string name="routines_start">Iniciar ▶</string>
+    <string name="routines_metrics">%1$d ejercicios • %2$d min</string>
+    <string name="routines_dialog_title">Nueva rutina</string>
+    <string name="routines_dialog_name_hint">Nombre del bloque</string>
+    <string name="routines_dialog_name_placeholder">Ej. Día 5: Hombro y Core</string>
+    <string name="routines_dialog_muscles_hint">Músculos principales</string>
+    <string name="routines_dialog_muscles_placeholder">Ej. Deltoides y Abdomen</string>
+    <string name="routines_dialog_save">Guardar</string>
+    <string name="routines_dialog_cancel">Cancelar</string>
+    <string name="routines_error_empty_name">Escribe el nombre del bloque</string>
+    <string name="routines_error_empty_muscles">Indica los músculos principales</string>
+    <string name="routines_created">Rutina «%1$s» creada</string>
+    <string name="routines_starting">Iniciando %1$s</string>
+
     <!-- Pestañas pendientes -->
-    <string name="placeholder_routines">Aquí verás tus rutinas</string>
     <string name="placeholder_progress">Aquí verás tu progreso</string>
     <string name="placeholder_profile">Aquí verás tu perfil</string>
     <string name="placeholder_coming_soon">Disponible muy pronto</string>
