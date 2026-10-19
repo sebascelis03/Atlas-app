@@ -91,7 +91,7 @@
     <string name="progress_weight_minus">− 0.5</string>
     <string name="progress_weight_plus">+ 0.5</string>
     <string name="progress_save_weight">Guardar peso de hoy</string>
-    <string name="progress_weight_saved">Peso registrado: %1$s kg</string>
+    <string name="progress_weight_saved">Peso guardado: %1$s kg</string>
     <string name="progress_water_card_title">Consumo de Agua 💧</string>
     <string name="progress_water_card_subtitle">Mantente hidratado durante el día</string>
     <plurals name="progress_water_glasses">

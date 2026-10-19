@@ -69,14 +69,7 @@ class ProgressFragment : Fragment() {
 
         binding.btnSaveWeight.setOnClickListener {
             if (!hasWeight()) return@setOnClickListener showExactWeightDialog()
-
-            MetricsRepository.updateWeight(draftWeight)
-            renderHistory()
-            Toast.makeText(
-                requireContext(),
-                getString(R.string.progress_weight_saved, formatWeight(draftWeight)),
-                Toast.LENGTH_SHORT
-            ).show()
+            saveWeight(draftWeight)
         }
 
         binding.btnMinusWater.setOnClickListener {
@@ -91,6 +84,21 @@ class ProgressFragment : Fragment() {
     }
 
     private fun hasWeight(): Boolean = draftWeight > 0.0
+
+    /** Persiste el peso del día y refresca peso, meta e historial en pantalla. */
+    private fun saveWeight(weightKg: Double) {
+        MetricsRepository.updateWeight(weightKg)
+        draftWeight = weightKg
+
+        renderWeight()
+        renderHistory()
+
+        Toast.makeText(
+            requireContext(),
+            getString(R.string.progress_weight_saved, formatWeight(weightKg)),
+            Toast.LENGTH_SHORT
+        ).show()
+    }
 
     /** Diálogo con teclado numérico para escribir el peso exacto. */
     private fun showExactWeightDialog() {
@@ -120,9 +128,9 @@ class ProgressFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            draftWeight = value
-            renderWeight()
+            // Se guarda al aplicar: el usuario no necesita un segundo toque.
             dialog.dismiss()
+            saveWeight(value)
         }
 
         dialog.show()

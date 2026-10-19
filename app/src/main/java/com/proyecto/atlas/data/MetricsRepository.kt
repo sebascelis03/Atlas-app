@@ -72,7 +72,7 @@ object MetricsRepository {
      * la racha según el calendario — varias sesiones el mismo día cuentan como un
      * solo día de racha, y un día sin entrenar la reinicia.
      */
-    fun registrarEntrenamiento() {
+    fun incrementWorkouts() {
         val today = todayKey()
 
         totalEntrenamientos++

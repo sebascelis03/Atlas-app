@@ -53,9 +53,15 @@ class RoutinesFragment : Fragment() {
                 Toast.LENGTH_SHORT
             ).show()
 
-            // MainActivity carga los ejercicios del bloque a partir de este id.
-            val intent = Intent(requireContext(), MainActivity::class.java)
-            intent.putExtra(MainActivity.EXTRA_ROUTINE_ID, routine.id)
+            // MainActivity arma el entrenamiento con los datos de este bloque.
+            val intent = Intent(requireContext(), MainActivity::class.java).apply {
+                putExtra(MainActivity.EXTRA_ROUTINE_ID, routine.id)
+                putExtra(MainActivity.EXTRA_ROUTINE_TITLE, routine.title)
+                putStringArrayListExtra(
+                    MainActivity.EXTRA_EXERCISES,
+                    ArrayList(routine.exerciseNames)
+                )
+            }
             startActivity(intent)
         }
 

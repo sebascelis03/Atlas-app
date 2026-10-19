@@ -65,17 +65,28 @@ class MainActivity : AppCompatActivity() {
 
     /**
      * Carga la rutina elegida en la pestaña Rutinas. Si se entra sin rutina
-     * (ej. "Comenzar entrenamiento" desde Inicio) la sesión arranca vacía.
+     * (ej. "Comenzar entrenamiento" desde Inicio) la sesión arranca vacía y el
+     * usuario arma su entrenamiento libremente.
      */
     private fun loadSelectedRoutine() {
-        val routineId = intent.getStringExtra(EXTRA_ROUTINE_ID) ?: return
-        val routine = RoutineRepository.getRoutineById(routineId) ?: return
+        val routineId = intent.getStringExtra(EXTRA_ROUTINE_ID)
+        val routine = routineId?.let { RoutineRepository.getRoutineById(it) }
 
-        activeWorkout.title = routine.title
-        binding.tvWorkoutTitle.text = routine.title
+        // El título viaja en el Intent; si falta, se recupera del repositorio.
+        val title = intent.getStringExtra(EXTRA_ROUTINE_TITLE) ?: routine?.title
+        if (title != null) {
+            activeWorkout.title = title
+            binding.tvWorkoutTitle.text = title
+        }
 
-        // Los nombres de la rutina se resuelven contra el catálogo de ejercicios.
-        routine.exerciseNames.forEach { exerciseName ->
+        // Igual con los ejercicios: el Intent manda, el repositorio es respaldo.
+        val exerciseNames = intent.getStringArrayListExtra(EXTRA_EXERCISES)
+            ?.takeIf { it.isNotEmpty() }
+            ?: routine?.exerciseNames
+            ?: return
+
+        // Los nombres se resuelven contra el catálogo de ejercicios.
+        exerciseNames.forEach { exerciseName ->
             val exercise = ExerciseRepository.defaultExercises
                 .firstOrNull { it.name.equals(exerciseName, ignoreCase = true) }
                 ?: return@forEach
@@ -84,7 +95,7 @@ class MainActivity : AppCompatActivity() {
                 WorkoutExercise(
                     exercise = exercise,
                     sets = MutableList(DEFAULT_SETS_PER_EXERCISE) { index ->
-                        WorkoutSet(index + 1, "-", 0.0, 0, false)
+                        WorkoutSet(index + 1, "-", 0.0, DEFAULT_REPS_PER_SET, false)
                     }
                 )
             )
@@ -294,7 +305,7 @@ class MainActivity : AppCompatActivity() {
 
     /** Acredita el entrenamiento en las estadísticas y regresa a la pestaña Inicio. */
     private fun finishWorkout() {
-        MetricsRepository.registrarEntrenamiento()
+        MetricsRepository.incrementWorkouts()
         Toast.makeText(this, "¡Entrenamiento guardado con éxito!", Toast.LENGTH_SHORT).show()
 
         val intent = Intent(this, HomeContainerActivity::class.java)
@@ -310,10 +321,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        /** Id de la rutina a entrenar; opcional. */
-        const val EXTRA_ROUTINE_ID = "extra_routine_id"
+        /** Datos de la rutina a entrenar. Todos opcionales: sin ellos la sesión es libre. */
+        const val EXTRA_ROUTINE_ID = "EXTRA_ROUTINE_ID"
+        const val EXTRA_ROUTINE_TITLE = "EXTRA_ROUTINE_TITLE"
+        const val EXTRA_EXERCISES = "EXTRA_EXERCISES"
 
         private const val DEFAULT_SETS_PER_EXERCISE = 3
+        private const val DEFAULT_REPS_PER_SET = 10
         private const val DIALOG_WIDTH_RATIO = 0.88
     }
 }
