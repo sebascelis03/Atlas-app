@@ -83,8 +83,34 @@
     <string name="routines_created">Rutina «%1$s» creada</string>
     <string name="routines_starting">Iniciando %1$s</string>
 
-    <!-- Pestañas pendientes -->
-    <string name="placeholder_progress">Aquí verás tu progreso</string>
-    <string name="placeholder_profile">Aquí verás tu perfil</string>
-    <string name="placeholder_coming_soon">Disponible muy pronto</string>
+    <!-- Progreso / Registro diario -->
+    <string name="progress_title">Progreso Diario</string>
+    <string name="progress_weight_card_title">Registro de Peso</string>
+    <string name="progress_weight_card_subtitle">Peso corporal actual</string>
+    <string name="progress_weight_value">%1$s kg</string>
+    <string name="progress_weight_minus">− 0.5</string>
+    <string name="progress_weight_plus">+ 0.5</string>
+    <string name="progress_save_weight">Guardar peso de hoy</string>
+    <string name="progress_weight_saved">Peso registrado: %1$s kg</string>
+    <string name="progress_water_card_title">Consumo de Agua 💧</string>
+    <string name="progress_water_card_subtitle">Mantente hidratado durante el día</string>
+    <string name="progress_water_count">%1$d / %2$d vasos</string>
+    <string name="progress_water_minus">−</string>
+    <string name="progress_water_plus">+</string>
+    <string name="progress_water_goal_reached">¡Meta de hidratación cumplida!</string>
+    <string name="progress_history_card_title">Historial Reciente</string>
+
+    <!-- Perfil -->
+    <string name="profile_avatar_desc">Avatar del usuario</string>
+    <string name="profile_stat_weight">Peso</string>
+    <string name="profile_stat_target">Meta</string>
+    <string name="profile_stat_streak">Racha</string>
+    <string name="profile_stat_weight_value">%1$s kg</string>
+    <string name="profile_stat_streak_value">%1$d días 🔥</string>
+    <string name="profile_account_title">Información de la cuenta</string>
+    <string name="profile_goal_label">Objetivo</string>
+    <string name="profile_level_label">Nivel</string>
+    <string name="profile_level_value">Intermedio</string>
+    <string name="profile_logout">Cerrar sesión</string>
+    <string name="profile_logout_done">Sesión cerrada</string>
 </resources>

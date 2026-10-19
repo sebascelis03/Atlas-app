@@ -10,6 +10,7 @@ import com.proyecto.atlas.HomeContainerActivity
 import com.proyecto.atlas.MainActivity
 import com.proyecto.atlas.R
 import com.proyecto.atlas.data.AuthRepository
+import com.proyecto.atlas.data.MetricsRepository
 import com.proyecto.atlas.databinding.FragmentHomeBinding
 import com.proyecto.atlas.databinding.ItemHomeExerciseBinding
 import java.text.SimpleDateFormat
@@ -61,7 +62,7 @@ class HomeFragment : Fragment() {
             COMPLETED_WORKOUTS,
             WEEKLY_GOAL_WORKOUTS
         )
-        binding.tvStreak.text = getString(R.string.home_streak, STREAK_DAYS)
+        binding.tvStreak.text = getString(R.string.home_streak, MetricsRepository.RACHA_DIAS)
     }
 
     /** Infla las filas de la rutina de hoy dentro de la tarjeta. */
@@ -108,7 +109,6 @@ class HomeFragment : Fragment() {
     private companion object {
         const val COMPLETED_WORKOUTS = 4
         const val WEEKLY_GOAL_WORKOUTS = 6
-        const val STREAK_DAYS = 6
 
         // El mockup muestra 68%: el avance pondera también el volumen levantado,
         // no solo la cuenta de sesiones (4/6 sería 66%).

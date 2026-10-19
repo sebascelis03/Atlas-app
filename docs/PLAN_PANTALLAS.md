@@ -46,14 +46,15 @@ data class Routine(
 
 ## 🚀 Estado de Avance y Prompts Listos para Claude Code
 
-Los prompts de construcción están organizados en `docs/prompts/` listos para ser ejecutados en orden:
+Los prompts de construcción están organizados en `docs/prompts/` y han sido completados al 100%:
 
 | Fase | Pantalla / Módulo | Archivo de Prompt | Estado |
 |---|---|---|---|
-| **1** | **Login & Autenticación Mock** | [`PROMPT_01_AUTH_Y_LOGIN.md`](file:///c:/Users/HP%20INC/Desktop/ATLAS2/docs/prompts/PROMPT_01_AUTH_Y_LOGIN.md) | ⏳ En ejecución por Claude |
-| **2** | **Registro de Usuario** | [`PROMPT_02_REGISTRO.md`](file:///c:/Users/HP%20INC/Desktop/ATLAS2/docs/prompts/PROMPT_02_REGISTRO.md) | 🟢 Listo para copiar |
-| **3** | **BottomNavigation + Dashboard Inicio** | [`PROMPT_03_NAV_Y_HOME.md`](file:///c:/Users/HP%20INC/Desktop/ATLAS2/docs/prompts/PROMPT_03_NAV_Y_HOME.md) | 🟢 Listo para copiar |
-| **4** | **Bloques de Rutinas** | [`PROMPT_04_RUTINAS.md`](file:///c:/Users/HP%20INC/Desktop/ATLAS2/docs/prompts/PROMPT_04_RUTINAS.md) | 🟢 Listo para copiar |
-| **5** | **Registro Rápido (Progreso) & Perfil** | [`PROMPT_05_REGISTRO_RAPIDO_Y_PERFIL.md`](file:///c:/Users/HP%20INC/Desktop/ATLAS2/docs/prompts/PROMPT_05_REGISTRO_RAPIDO_Y_PERFIL.md) | 🟢 Listo para copiar |
-| **Extra** | **Entrenamiento Activo en Vivo** | [MainActivity.kt](file:///c:/Users/HP%20INC/Desktop/ATLAS2/app/src/main/java/com/proyecto/atlas/MainActivity.kt) | ✅ Ya construido con cronómetro |
+| **1** | **Login & Autenticación Mock** | [`PROMPT_01_AUTH_Y_LOGIN.md`](file:///c:/Users/HP%20INC/Desktop/ATLAS2/docs/prompts/PROMPT_01_AUTH_Y_LOGIN.md) | ✅ Completado (`BUILD SUCCESSFUL`) |
+| **2** | **Registro de Usuario** | [`PROMPT_02_REGISTRO.md`](file:///c:/Users/HP%20INC/Desktop/ATLAS2/docs/prompts/PROMPT_02_REGISTRO.md) | ✅ Completado (`BUILD SUCCESSFUL`) |
+| **3** | **BottomNavigation + Dashboard Inicio** | [`PROMPT_03_NAV_Y_HOME.md`](file:///c:/Users/HP%20INC/Desktop/ATLAS2/docs/prompts/PROMPT_03_NAV_Y_HOME.md) | ✅ Completado (`BUILD SUCCESSFUL`) |
+| **4** | **Bloques de Rutinas** | [`PROMPT_04_RUTINAS.md`](file:///c:/Users/HP%20INC/Desktop/ATLAS2/docs/prompts/PROMPT_04_RUTINAS.md) | ✅ Completado (`BUILD SUCCESSFUL`) |
+| **5** | **Registro Rápido (Progreso) & Perfil** | [`PROMPT_05_REGISTRO_RAPIDO_Y_PERFIL.md`](file:///c:/Users/HP%20INC/Desktop/ATLAS2/docs/prompts/PROMPT_05_REGISTRO_RAPIDO_Y_PERFIL.md) | ✅ Completado (`BUILD SUCCESSFUL`) |
+| **Extra** | **Entrenamiento Activo en Vivo** | [MainActivity.kt](file:///c:/Users/HP%20INC/Desktop/ATLAS2/app/src/main/java/com/proyecto/atlas/MainActivity.kt) | ✅ Conectado con cronómetro y series |
+
 

@@ -14,6 +14,7 @@
     <color name="primary_neon">#00E676</color>
     <color name="primary_neon_glow">#3300E676</color>
     <color name="accent_orange">#FF9100</color>
+    <color name="accent_orange_glow">#33FF9100</color>
     <color name="accent_cyan">#00E5FF</color>
     <color name="accent_red">#FF5252</color>
 
