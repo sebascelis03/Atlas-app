@@ -216,7 +216,7 @@
                         android:textColor="@color/accent_cyan"
                         android:textSize="24sp"
                         android:textStyle="bold"
-                        tools:text="6 / 8 vasos" />
+                        tools:text="0 vasos" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnPlusWater"
@@ -234,18 +234,6 @@
                         app:cornerRadius="23dp"
                         app:strokeColor="@color/surface_card_stroke" />
                 </LinearLayout>
-
-                <com.google.android.material.progressindicator.LinearProgressIndicator
-                    android:id="@+id/progressWater"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
-                    android:max="8"
-                    app:indicatorColor="@color/accent_cyan"
-                    app:trackColor="@color/surface_input"
-                    app:trackCornerRadius="4dp"
-                    app:trackThickness="7dp"
-                    tools:progress="6" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -280,6 +268,19 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
                     android:orientation="vertical" />
+
+                <!-- Estado vacío: aún no hay pesajes guardados -->
+                <TextView
+                    android:id="@+id/tvHistoryEmpty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:lineSpacingExtra="2dp"
+                    android:text="@string/progress_history_empty"
+                    android:textColor="@color/text_muted"
+                    android:textSize="13sp"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 

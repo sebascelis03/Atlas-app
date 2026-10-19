@@ -27,7 +27,7 @@ class ProgressFragment : Fragment() {
     private val binding get() = _binding!!
 
     /** Peso en edición; solo se persiste al pulsar "Guardar peso de hoy". */
-    private var draftWeight: Double = MetricsRepository.pesoActual
+    private var draftWeight: Double = 0.0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,7 +42,7 @@ class ProgressFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         draftWeight = savedInstanceState?.getDouble(STATE_DRAFT_WEIGHT)
-            ?: MetricsRepository.pesoActual
+            ?: MetricsRepository.getPesoBase()
 
         renderWeight()
         renderWater()
@@ -51,12 +51,16 @@ class ProgressFragment : Fragment() {
     }
 
     private fun setupButtons() {
+        // Sin un peso de partida los ajustes rápidos no tienen sentido:
+        // el primer valor se escribe en el diálogo.
         binding.btnMinusWeight.setOnClickListener {
+            if (!hasWeight()) return@setOnClickListener showExactWeightDialog()
             draftWeight = (draftWeight - WEIGHT_STEP).coerceAtLeast(MIN_WEIGHT)
             renderWeight()
         }
 
         binding.btnPlusWeight.setOnClickListener {
+            if (!hasWeight()) return@setOnClickListener showExactWeightDialog()
             draftWeight = (draftWeight + WEIGHT_STEP).coerceAtMost(MAX_WEIGHT)
             renderWeight()
         }
@@ -64,6 +68,8 @@ class ProgressFragment : Fragment() {
         binding.tvCurrentWeight.setOnClickListener { showExactWeightDialog() }
 
         binding.btnSaveWeight.setOnClickListener {
+            if (!hasWeight()) return@setOnClickListener showExactWeightDialog()
+
             MetricsRepository.updateWeight(draftWeight)
             renderHistory()
             Toast.makeText(
@@ -79,17 +85,12 @@ class ProgressFragment : Fragment() {
         }
 
         binding.btnPlusWater.setOnClickListener {
-            val glasses = MetricsRepository.incrementWater()
+            MetricsRepository.incrementWater()
             renderWater()
-            if (glasses == MetricsRepository.WATER_GOAL) {
-                Toast.makeText(
-                    requireContext(),
-                    R.string.progress_water_goal_reached,
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
         }
     }
+
+    private fun hasWeight(): Boolean = draftWeight > 0.0
 
     /** Diálogo con teclado numérico para escribir el peso exacto. */
     private fun showExactWeightDialog() {
@@ -100,10 +101,12 @@ class ProgressFragment : Fragment() {
         dialog.setContentView(dialogBinding.root)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        dialogBinding.etExactWeight.setText(formatWeight(draftWeight))
-        dialogBinding.etExactWeight.setSelection(
-            dialogBinding.etExactWeight.text?.length ?: 0
-        )
+        if (hasWeight()) {
+            dialogBinding.etExactWeight.setText(formatWeight(draftWeight))
+            dialogBinding.etExactWeight.setSelection(
+                dialogBinding.etExactWeight.text?.length ?: 0
+            )
+        }
 
         dialogBinding.btnCancelExactWeight.setOnClickListener { dialog.dismiss() }
 
@@ -123,11 +126,18 @@ class ProgressFragment : Fragment() {
         }
 
         dialog.show()
+
+        // Sin ancho explícito el Dialog se encoge al contenido y corta los textos.
+        val width = (resources.displayMetrics.widthPixels * DIALOG_WIDTH_RATIO).toInt()
+        dialog.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 
     private fun renderWeight() {
-        binding.tvCurrentWeight.text =
+        binding.tvCurrentWeight.text = if (draftWeight > 0.0) {
             getString(R.string.progress_weight_value, formatWeight(draftWeight))
+        } else {
+            getString(R.string.progress_weight_unset)
+        }
         renderDistanceToGoal()
     }
 
@@ -135,7 +145,12 @@ class ProgressFragment : Fragment() {
     private fun renderDistanceToGoal() {
         val targetWeight = AuthRepository.getCurrentUser()?.targetWeight
 
-        if (targetWeight == null) {
+        if (draftWeight <= 0.0) {
+            binding.tvWeightToGoal.text = ""
+            return
+        }
+
+        if (targetWeight == null || targetWeight <= 0.0) {
             binding.tvWeightToGoal.setText(R.string.progress_no_goal)
             return
         }
@@ -155,16 +170,12 @@ class ProgressFragment : Fragment() {
 
     private fun renderWater() {
         val glasses = MetricsRepository.vasosAgua
-        binding.tvWaterCount.text = getString(
-            R.string.progress_water_count,
+        binding.tvWaterCount.text = resources.getQuantityString(
+            R.plurals.progress_water_glasses,
             glasses,
-            MetricsRepository.WATER_GOAL
+            glasses
         )
-        binding.progressWater.max = MetricsRepository.WATER_GOAL
-        binding.progressWater.progress = glasses
-
         binding.btnMinusWater.isEnabled = glasses > 0
-        binding.btnPlusWater.isEnabled = glasses < MetricsRepository.WATER_GOAL
     }
 
     /**
@@ -176,6 +187,8 @@ class ProgressFragment : Fragment() {
 
         val history = MetricsRepository.getWeightHistory()
         val targetWeight = AuthRepository.getCurrentUser()?.targetWeight
+
+        binding.tvHistoryEmpty.visibility = if (history.isEmpty()) View.VISIBLE else View.GONE
 
         history.forEachIndexed { index, (date, weightKg) ->
             val rowBinding = ItemWeightLogBinding.inflate(
@@ -240,5 +253,6 @@ class ProgressFragment : Fragment() {
         const val MAX_WEIGHT = 300.0
         const val GOAL_TOLERANCE = 0.05
         const val STATE_DRAFT_WEIGHT = "draft_weight"
+        const val DIALOG_WIDTH_RATIO = 0.88
     }
 }

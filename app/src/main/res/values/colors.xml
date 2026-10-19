@@ -17,6 +17,7 @@
     <color name="accent_orange_glow">#33FF9100</color>
     <color name="accent_cyan">#00E5FF</color>
     <color name="accent_red">#FF5252</color>
+    <color name="surface_danger">#1C1517</color>
 
     <!-- Typography -->
     <color name="text_primary">#F0F3F6</color>

@@ -59,14 +59,19 @@ class ProfileFragment : Fragment() {
 
         // El peso vive en MetricsRepository (se actualiza desde Progreso);
         // la meta y el objetivo son parte del perfil creado al registrarse.
-        binding.tvStatWeight.text = getString(
-            R.string.profile_stat_weight_value,
-            formatWeight(MetricsRepository.pesoActual)
-        )
-        binding.tvStatTarget.text = getString(
-            R.string.profile_stat_weight_value,
-            formatWeight(user?.targetWeight ?: DEFAULT_TARGET_WEIGHT)
-        )
+        val currentWeight = MetricsRepository.getPesoBase()
+        binding.tvStatWeight.text = if (currentWeight > 0.0) {
+            getString(R.string.profile_stat_weight_value, formatWeight(currentWeight))
+        } else {
+            getString(R.string.progress_weight_unset)
+        }
+
+        val target = user?.targetWeight ?: 0.0
+        binding.tvStatTarget.text = if (target > 0.0) {
+            getString(R.string.profile_stat_weight_value, formatWeight(target))
+        } else {
+            getString(R.string.progress_weight_unset)
+        }
         binding.tvStatStreak.text =
             getString(R.string.profile_stat_streak_value, MetricsRepository.RACHA_DIAS)
         binding.tvTotalWorkouts.text = getString(
@@ -84,9 +89,9 @@ class ProfileFragment : Fragment() {
         val sheetBinding = BottomSheetEditGoalsBinding.inflate(layoutInflater)
         sheet.setContentView(sheetBinding.root)
 
-        sheetBinding.etTargetWeight.setText(
-            formatWeight(user?.targetWeight ?: DEFAULT_TARGET_WEIGHT)
-        )
+        user?.targetWeight?.takeIf { it > 0.0 }?.let { target ->
+            sheetBinding.etTargetWeight.setText(formatWeight(target))
+        }
 
         // Chips de objetivo: selección única, con el actual preseleccionado.
         val currentGoal = user?.goal ?: DEFAULT_GOAL
@@ -157,6 +162,10 @@ class ProfileFragment : Fragment() {
         }
 
         dialog.show()
+
+        // Sin ancho explícito el Dialog se encoge al contenido y corta los textos.
+        val width = (resources.displayMetrics.widthPixels * DIALOG_WIDTH_RATIO).toInt()
+        dialog.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 
     private fun logout() {
@@ -178,9 +187,9 @@ class ProfileFragment : Fragment() {
     }
 
     private companion object {
-        const val DEFAULT_TARGET_WEIGHT = 80.0
         const val DEFAULT_GOAL = "Hipertrofia"
         const val MIN_WEIGHT = 30.0
         const val MAX_WEIGHT = 300.0
+        const val DIALOG_WIDTH_RATIO = 0.88
     }
 }

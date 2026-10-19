@@ -52,16 +52,16 @@ class HomeFragment : Fragment() {
         binding.tvAvatarInitial.text = name.first().uppercase(locale)
     }
 
-    /** Métricas mock de la meta semanal y la racha (vendrán del repositorio en el Prompt 5). */
+    /** Meta semanal y racha, calculadas a partir de las métricas registradas. */
     private fun bindWeeklyGoal() {
-        binding.progressWeeklyGoal.progress = WEEKLY_GOAL_PERCENT
-        binding.tvWeeklyGoalPercent.text =
-            getString(R.string.home_weekly_goal_percent, WEEKLY_GOAL_PERCENT)
-        binding.tvWeeklyGoalDetail.text = getString(
-            R.string.home_weekly_goal_detail,
-            COMPLETED_WORKOUTS,
-            WEEKLY_GOAL_WORKOUTS
-        )
+        val completed = MetricsRepository.ENTRENAMIENTOS_SEMANA
+        val goal = MetricsRepository.META_SEMANAL
+        val percent = if (goal > 0) completed * 100 / goal else 0
+
+        binding.progressWeeklyGoal.progress = percent
+        binding.tvWeeklyGoalPercent.text = getString(R.string.home_weekly_goal_percent, percent)
+        binding.tvWeeklyGoalDetail.text =
+            getString(R.string.home_weekly_goal_detail, completed, goal)
         binding.tvStreak.text = getString(R.string.home_streak, MetricsRepository.RACHA_DIAS)
     }
 
@@ -107,13 +107,6 @@ class HomeFragment : Fragment() {
     )
 
     private companion object {
-        const val COMPLETED_WORKOUTS = 4
-        const val WEEKLY_GOAL_WORKOUTS = 6
-
-        // El mockup muestra 68%: el avance pondera también el volumen levantado,
-        // no solo la cuenta de sesiones (4/6 sería 66%).
-        const val WEEKLY_GOAL_PERCENT = 68
-
         val todayExercises = listOf(
             TodayExercise("Press de banca", sets = 4, reps = 8),
             TodayExercise("Press militar", sets = 3, reps = 10, isDone = true),

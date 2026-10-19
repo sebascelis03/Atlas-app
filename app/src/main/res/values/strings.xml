@@ -94,10 +94,14 @@
     <string name="progress_weight_saved">Peso registrado: %1$s kg</string>
     <string name="progress_water_card_title">Consumo de Agua 💧</string>
     <string name="progress_water_card_subtitle">Mantente hidratado durante el día</string>
-    <string name="progress_water_count">%1$d / %2$d vasos</string>
+    <plurals name="progress_water_glasses">
+        <item quantity="one">%1$d vaso</item>
+        <item quantity="other">%1$d vasos</item>
+    </plurals>
+    <string name="progress_history_empty">Aún no hay registros de peso. Guarda tu primer peso arriba.</string>
+    <string name="progress_weight_unset">Sin registro</string>
     <string name="progress_water_minus">−</string>
     <string name="progress_water_plus">+</string>
-    <string name="progress_water_goal_reached">¡Meta de hidratación cumplida!</string>
     <string name="progress_history_card_title">Historial Reciente</string>
 
     <!-- Perfil -->

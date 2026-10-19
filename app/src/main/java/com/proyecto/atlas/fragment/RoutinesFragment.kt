@@ -98,6 +98,10 @@ class RoutinesFragment : Fragment() {
         }
 
         dialog.show()
+
+        // Sin ancho explícito el Dialog se encoge al contenido y corta los textos.
+        val width = (resources.displayMetrics.widthPixels * DIALOG_WIDTH_RATIO).toInt()
+        dialog.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 
     private fun saveRoutine(name: String, muscles: String) {
@@ -124,5 +128,9 @@ class RoutinesFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private companion object {
+        const val DIALOG_WIDTH_RATIO = 0.88
     }
 }
