@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Atlas Fitness Theme Colors -->
+    <color name="bg_dark">#0E1117</color>
+    <color name="surface_dark">#161B22</color>
+    <color name="surface_card">#212631</color>
+    <color name="surface_card_stroke">#303644</color>
+    <color name="surface_input">#1A1F29</color>
+
+    <!-- Accents -->
+    <color name="primary_neon">#00E676</color>
+    <color name="primary_neon_glow">#3300E676</color>
+    <color name="accent_orange">#FF9100</color>
+    <color name="accent_cyan">#00E5FF</color>
+    <color name="accent_red">#FF5252</color>
+
+    <!-- Typography -->
+    <color name="text_primary">#F0F3F6</color>
+    <color name="text_secondary">#8B949E</color>
+    <color name="text_muted">#586069</color>
+    
+    <!-- Badges & State -->
+    <color name="chip_bg">#212631</color>
+    <color name="chip_stroke">#363C4A</color>
+    <color name="set_completed">#1B382B</color>
+    <color name="set_completed_stroke">#00E676</color>
+</resources>

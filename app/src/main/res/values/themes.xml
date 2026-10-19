@@ -1,0 +1,27 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.ATLAS" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/primary_neon</item>
+        <item name="colorOnPrimary">@color/bg_dark</item>
+        <item name="colorSecondary">@color/accent_orange</item>
+        <item name="android:windowBackground">@color/bg_dark</item>
+        <item name="android:statusBarColor">@color/bg_dark</item>
+        <item name="android:navigationBarColor">@color/surface_dark</item>
+    </style>
+
+    <style name="Theme.ATLAS" parent="Base.Theme.ATLAS" />
+
+    <!-- Campos de texto Material 3 adaptados a la paleta oscura de ATLAS -->
+    <style name="Atlas.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxBackgroundColor">@color/surface_input</item>
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">12dp</item>
+        <item name="boxCornerRadiusBottomEnd">12dp</item>
+        <item name="boxStrokeColor">@color/atlas_box_stroke</item>
+        <item name="hintTextColor">@color/primary_neon</item>
+        <item name="android:textColorHint">@color/text_secondary</item>
+        <item name="errorTextColor">@color/accent_red</item>
+        <item name="errorIconTint">@color/accent_red</item>
+    </style>
+</resources>
