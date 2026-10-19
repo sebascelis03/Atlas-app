@@ -68,8 +68,7 @@ class LoginActivity : AppCompatActivity() {
         binding.btnLogin.setOnClickListener { attemptLogin() }
 
         binding.tvGoToRegister.setOnClickListener {
-            // RegisterActivity aún no existe (Prompt 2). Placeholder temporal.
-            Toast.makeText(this, R.string.login_feature_pending, Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, RegisterActivity::class.java))
         }
 
         binding.tvForgotPassword.setOnClickListener {
