@@ -199,3 +199,23 @@ Con toda la aplicación en JavaScript y las 3 pestañas terminadas, se ejecutó 
 * **Problema:** La plantilla por defecto de `@capacitor/android` genera `gradle-8.2.1-all.zip`, el cual falló inicialmente con `Unsupported class file major version 69` al ejecutarse con el JBR de Android Studio (OpenJDK `25.0.3`).
 * **Solución (ADR-030):** Se actualizó `android/gradle/wrapper/gradle-wrapper.properties` a **Gradle `8.10.2`** y se configuró `scripts/build-apk.ps1` para priorizar el **JDK 23** instalado en el sistema (`C:\Program Files\Java\jdk-23`), que es 100 % compatible con Gradle `8.10.2`.
 * **Resultado Verificado:** `BUILD SUCCESSFUL` (108 tareas ejecutadas) y archivo instalador exportado en **`c:\Users\HP INC\Desktop\ATLAS2\ATLAS-debug.apk` (`3.64 MB`)**.
+
+---
+
+## Iteración #11 — 23 de noviembre de 2026: Identidad 100 % Anaranjada, Catálogo de 50 Ejercicios Reales, Selector de Género de 40 Opciones y Pizarra 100 % Limpia
+
+### 1. Contexto
+Tras verificar la primera exportación del `.apk`, el usuario solicitó cuatro ajustes clave sobre la estética y los datos iniciales de la aplicación, más la actualización del selector de género a una lista desplegable `<select>` con 40 opciones específicas.
+
+### 2. Decisiones Tomadas
+* **ADR-031 (Unificación Monocromática 100 % Anaranjada sobre Tema Oscuro Predeterminado):** El tema oscuro (`dark`) permanece como predeterminado al iniciar la aplicación y todos los tokens de acento (`--accent-orange`, `--primary-neon`, `--accent-cyan`, `--set-completed-stroke` y `--group-*`) se unificaron a tonos anaranjados (`#FF9100`, `#FFA726`, `#FB8C00`, `#F57C00`, `#FFB74D`), eliminando cualquier acento verde neón o cian en botones, barras de agua, checks de series, bordes de foco e íconos.
+* **ADR-032 (Eliminación de Bloques por Defecto):** Se eliminó `DEFAULT_BLOCKS` en `src/services/blockService.js`. Todo usuario nuevo inicia con `0` bloques creados (`[]`) y estados vacíos claros que lo guían a crear sus propios bloques desde cero o iniciar una rutina improvisada.
+* **ADR-033 (Catálogo Base de 50 Ejercicios Fundamentales Reales + Creación Personalizada):** Se amplió `BASE_EXERCISES` en `src/services/exerciseCatalog.js` a 50 ejercicios reales de gimnasio incluyendo variantes específicas (*Press de banca en banco plano*, *Press plano con mancuernas*, *Press militar con mancuernas*, *Press militar en máquina*, *Jalón dorsal con agarre ancho*, *Jalón dorsal unilateral*, *Jalón dorsal*, etc.), conservando en todo momento el botón **"+ Crear ejercicio propio"**.
+* **ADR-034 (Cero Datos Demo / Sin Pre-rellenados y Prefijo `atlas_v3_`):** Se eliminaron `DEMO_USERS` en `authService.js`, el botón de autocompletado demo en `AuthScreen.js`, los valores pre-escritos en inputs (como año de nacimiento o pesos base/meta de `70 kg` y `75 kg`), y se actualizó el prefijo de `storage.js` a `atlas_v3_` para garantizar un arranque 100 % limpio en cero.
+* **ADR-035 (Lista Desplegable `<select>` de Género con 40 Opciones):** Se reemplazaron los chips de género en `AuthScreen.js` y `ProfileMenuModal.js` por un elemento `<select class="field__select">` estilizado en oscuro + naranja con las 40 opciones oficiales en orden.
+
+### 3. Lo que se Hizo
+* Actualización de `index.html`, `vite.config.js`, `src/styles/atlas.css` y `src/core/storage.js`.
+* Actualización de `authService.js`, `blockService.js`, `exerciseCatalog.js`, `preferencesService.js` y `dailyLogService.js`.
+* Actualización de `AuthScreen.js`, `ProfileMenuModal.js` y `HomeTab.js`.
+* Recompilación del bundle web y re-exportación de `ATLAS-debug.apk`.

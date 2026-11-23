@@ -1,18 +1,9 @@
 /**
  * Servicio de Autenticación Local (Portada: Login y Registro Ampliado).
  *
- * Campos de Usuario según definición funcional definitiva:
- * - id: string
- * - name: string (Obligatorio)
- * - lastName: string (Opcional)
- * - email: string (Obligatorio, único)
- * - password: string (Obligatorio, mín. 6 caracteres)
- * - city: string (Opcional por privacidad)
- * - country: string (Opcional por privacidad)
- * - gender: 'Hombre' | 'Mujer' | 'Prefiero no decirlo'
- * - birthYear: number
- * - acceptedTerms: boolean
- * - createdAt: string (ISO)
+ * Principio de Pizarra Limpia (Clean Slate):
+ * - Cero usuarios demo pre-cargados. La lista de cuentas inicia vacía (`[]`).
+ * - Selector de Género con las 40 opciones oficiales en orden.
  */
 
 import { getCollection, saveCollection } from '../core/storage.js';
@@ -21,51 +12,58 @@ import { setUserIdResolver } from '../core/userScope.js';
 const KEY_USERS = 'auth_users';
 const KEY_SESSION = 'auth_session_user_id';
 
-export const GENDER_OPTIONS = ['Hombre', 'Mujer', 'Prefiero no decirlo'];
-
-const DEMO_USERS = [
-  {
-    id: '1',
-    name: 'Administrador',
-    lastName: 'ATLAS',
-    email: 'admin@atlas.com',
-    password: '123456',
-    city: 'Bogotá',
-    country: 'Colombia',
-    gender: 'Hombre',
-    birthYear: 1999,
-    acceptedTerms: true,
-    createdAt: '2026-10-01T12:00:00.000Z',
-  },
-  {
-    id: '2',
-    name: 'Usuario',
-    lastName: 'Demo',
-    email: 'usuario@atlas.com',
-    password: 'atlas2026',
-    city: 'Medellín',
-    country: 'Colombia',
-    gender: 'Prefiero no decirlo',
-    birthYear: 2002,
-    acceptedTerms: true,
-    createdAt: '2026-10-01T12:00:00.000Z',
-  },
+export const GENDER_OPTIONS = [
+  'Masculino',
+  'Femenino',
+  'No binario',
+  'Hombre transgénero',
+  'Mujer transgénero',
+  'Género fluido',
+  'Queer de género',
+  'Agénero',
+  'Bigénero',
+  'Dos espíritus',
+  'Pangénero',
+  'Demigénero',
+  'Demiboy',
+  'Demichica',
+  'Tercer género',
+  'Intersexual',
+  'Prefiero no decirlo',
+  'Otro',
+  'Otro (diferente del otro anterior)',
+  'Ninguno de los anteriores',
+  'Todos los de arriba',
+  'Alguno de los anteriores',
+  'Prefiero decirlo pero no lo haré',
+  'Prefiero no preferir',
+  'Es complicado',
+  'En realidad no es tan complicado, solo eres entrometido',
+  'Pregúntame de nuevo más tarde',
+  'Pregúntale a mi abogado primero',
+  'No aplicable',
+  'No aplicable, pero de una manera de género',
+  'Resultados pendientes',
+  'Indeciso',
+  'Indeciso inclinado',
+  'Prefiero no meterme en eso',
+  'Depende de quién pregunte',
+  'Múltiple',
+  'Sí',
+  'No',
+  'Tal vez',
+  'No te gustaría saber',
 ];
 
 let users = [];
 let currentUserId = null;
 
 /**
- * Inicializa el servicio de autenticación, sembrando los usuarios demo si no hay datos previos.
+ * Inicializa el servicio de autenticación sin usuarios ficticios pre-cargados.
  */
 export function initAuth() {
-  const storedUsers = getCollection(KEY_USERS, null);
-  if (!Array.isArray(storedUsers) || storedUsers.length === 0) {
-    users = structuredClone(DEMO_USERS);
-    saveCollection(KEY_USERS, users);
-  } else {
-    users = storedUsers;
-  }
+  const storedUsers = getCollection(KEY_USERS, []);
+  users = Array.isArray(storedUsers) ? storedUsers : [];
 
   const storedSession = getCollection(KEY_SESSION, null);
   if (storedSession && users.some((u) => u.id === storedSession)) {
@@ -156,8 +154,9 @@ export function register(payload) {
   const country = String(payload?.country || '').trim();
   const gender = GENDER_OPTIONS.includes(payload?.gender)
     ? payload.gender
-    : 'Prefiero no decirlo';
-  const birthYear = Number(payload?.birthYear);
+    : GENDER_OPTIONS[0];
+  const birthYearRaw = String(payload?.birthYear || '').trim();
+  const birthYear = Number(birthYearRaw);
   const currentYear = new Date().getFullYear();
   const acceptedTerms = Boolean(payload?.acceptedTerms);
 
@@ -178,7 +177,12 @@ export function register(payload) {
     fieldErrors.password = 'La contraseña debe tener al menos 6 caracteres';
   }
 
-  if (!Number.isInteger(birthYear) || birthYear < 1920 || birthYear > currentYear - 10) {
+  if (
+    !birthYearRaw ||
+    !Number.isInteger(birthYear) ||
+    birthYear < 1920 ||
+    birthYear > currentYear - 10
+  ) {
     fieldErrors.birthYear = `Ingresa un año válido (1920 - ${currentYear - 10})`;
   }
 

@@ -1,10 +1,10 @@
 /**
  * Servicio de Rutinas / Bloques de Entrenamiento (Pestaña 2: Rutinas).
  *
- * Según la definición funcional definitiva:
- * - Los bloques tienen nombre libre definido por el usuario y NO están atados a días fijos.
- * - Cada bloque contiene ejercicios tanto del catálogo base como creados por el usuario ("Crear ejercicio propio").
- * - Se siembran 4 bloques iniciales por usuario para que pueda probar de inmediato, y todos son editables/borrables.
+ * Principio de Pizarra Limpia (Clean Slate):
+ * - Cero bloques o rutinas creadas automáticamente por defecto.
+ * - El usuario arranca con su biblioteca limpia (`[]`) y crea sus propios bloques con nombre libre
+ *   y sin días fijos asociados.
  */
 
 import { getCollection, saveCollection } from '../core/storage.js';
@@ -14,79 +14,19 @@ import { getExerciseByName } from './exerciseCatalog.js';
 const KEY_BLOCKS = 'routine_blocks';
 export const MINUTES_PER_EXERCISE = 10;
 
-const DEFAULT_BLOCKS = [
-  {
-    id: 'b_push',
-    title: 'Empuje (Push)',
-    muscleGroups: 'Pecho, Hombro y Tríceps',
-    exerciseNames: [
-      'Press de Banca Plano',
-      'Press Inclinado con Mancuernas',
-      'Press Militar con Barra',
-      'Elevaciones Laterales',
-      'Extensiones de Tríceps en Polea',
-    ],
-    estimatedMinutes: 50,
-  },
-  {
-    id: 'b_pull',
-    title: 'Tirón (Pull)',
-    muscleGroups: 'Espalda y Bíceps',
-    exerciseNames: [
-      'Dominadas (Pull-ups)',
-      'Remo con Barra',
-      'Jalón al Pecho (Lat Pulldown)',
-      'Curl de Bíceps con Barra Z',
-      'Curl Martillo con Mancuernas',
-    ],
-    estimatedMinutes: 45,
-  },
-  {
-    id: 'b_legs',
-    title: 'Pierna Completa (Legs)',
-    muscleGroups: 'Cuádriceps, Femorales y Gemelos',
-    exerciseNames: [
-      'Sentadilla Trasera',
-      'Prensa de Piernas 45°',
-      'Extensiones de Cuádriceps',
-      'Curl Femoral Tumbado',
-      'Hip Thrust con Barra',
-      'Elevación de Talones (Gemelos)',
-    ],
-    estimatedMinutes: 60,
-  },
-  {
-    id: 'b_upper',
-    title: 'Torso Completo',
-    muscleGroups: 'Pectoral, Dorsales y Deltoides',
-    exerciseNames: [
-      'Press de Banca Plano',
-      'Remo Gironda (Polea Baja)',
-      'Press Militar con Mancuernas',
-      'Aperturas en Polea (Cruces)',
-      'Face Pulls',
-    ],
-    estimatedMinutes: 55,
-  },
-];
-
 function ensureBlocksLoaded() {
   const key = scopedKey(KEY_BLOCKS);
-  const stored = getCollection(key, null);
+  const stored = getCollection(key, []);
   if (!Array.isArray(stored)) {
-    const initial = DEFAULT_BLOCKS.map((b) => ({
-      ...b,
-      exerciseCount: b.exerciseNames.length,
-    }));
-    saveCollection(key, initial);
-    return initial;
+    return [];
   }
   return stored.map((b) => ({
     ...b,
     exerciseNames: Array.isArray(b.exerciseNames) ? b.exerciseNames : [],
     exerciseCount: Array.isArray(b.exerciseNames) ? b.exerciseNames.length : 0,
     estimatedMinutes:
-      b.estimatedMinutes || estimateMinutes(Array.isArray(b.exerciseNames) ? b.exerciseNames.length : 0),
+      b.estimatedMinutes ||
+      estimateMinutes(Array.isArray(b.exerciseNames) ? b.exerciseNames.length : 0),
   }));
 }
 
@@ -100,7 +40,7 @@ export function estimateMinutes(exerciseCount) {
 }
 
 /**
- * Devuelve todos los bloques del usuario activo.
+ * Devuelve todos los bloques creados por el usuario activo (inicia vacío `[]`).
  */
 export function getAllBlocks() {
   return ensureBlocksLoaded();

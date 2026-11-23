@@ -138,3 +138,12 @@ La fuente base es Sans-Serif del sistema (`Roboto`, `Inter` o `system-ui`). En m
 * **Botón Check de Serie (`bg_set_complete_btn.xml` - `40×38px`):**
   * No completada: Fondo `#1A1F29`, borde `1px solid #30363D`, radio `8px`, ícono `ic_check` en `#858F9C`.
   * Completada (`selected`): Fondo `#00E676` (`primary_neon`), sin borde, radio `8px`, ícono `ic_check` en `#0E1117`.
+
+---
+
+##Iteración #11 — 23 de noviembre de 2026: Unificación Monocromática 100 % Anaranjada (`#FF9100`)
+
+Por decisión de diseño del usuario, la identidad cromática de ATLAS se unificó a una **paleta 100 % anaranjada sobre el tema oscuro predeterminado (`#0E1117` / `#161B22` / `#212631`)**:
+* Todos los acentos que antes usaban verde neón (`#00E676`) o cian (`#00E5FF`) —incluyendo botones de Login y Finalizar sesión, checks de serie completada, barras y controles de hidratación, bordes de foco en inputs, tags de ejercicios e íconos— utilizan ahora `#FF9100` (`--accent-orange`) y sus variantes (`#FFA726`, `#FB8C00`, `rgba(255, 145, 0, 0.20)`).
+* Los colores por grupo muscular (`MuscleStyle`) se unificaron dentro de la gama naranja (`#FF9100`, `#FFA726`, `#FB8C00`, `#F57C00`, `#FFB74D`).
+* Solo se conserva `#FF5252` (`--accent-red`) para errores de validación y acciones destructivas (eliminar / cerrar sesión).

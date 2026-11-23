@@ -1,7 +1,8 @@
 /**
  * Menú Superior de Perfil (Esquina superior derecha del Header):
- * 1. Configuración de cuenta: Datos personales del usuario, Carpeta local y Respaldo JSON.
- * 2. Preferencias: Tema Oscuro/Claro (H-02), Tiempo de descanso por defecto, Sonido/Vibración y Metas.
+ * 1. Configuración de cuenta: Datos personales del usuario (con <select> de 40 opciones de Género),
+ *    Carpeta local y Respaldo JSON.
+ * 2. Preferencias: Tema Oscuro/Claro, Tiempo de descanso por defecto, Sonido/Vibración y Metas.
  * 3. Cerrar sesión: Diálogo de confirmación al 88% de ancho.
  */
 
@@ -70,7 +71,7 @@ export function toggleProfileDropdown({ onStateChanged, onLoggedOut }) {
 
     <button type="button" id="menuBtnPreferences" class="profile-dropdown__item" role="menuitem">
       <span style="display:flex;align-items:center;gap:10px;">
-        <span style="color:var(--primary-neon);display:flex;">${icon('ic_timer', { size: 20 })}</span>
+        <span style="color:var(--accent-orange);display:flex;">${icon('ic_timer', { size: 20 })}</span>
         <span>Preferencias</span>
       </span>
       <span class="text-caption">${prefs.theme === 'light' ? 'Claro' : 'Oscuro'} · ${prefs.defaultRestSeconds}s</span>
@@ -120,18 +121,11 @@ export function openAccountSettingsSheet({ onStateChanged }) {
 
   const folderCfg = StorageEngine.getFolderConfig();
   const totalWorkouts = WorkoutService.getTotalWorkouts();
-  let selectedGender = user.gender || 'Hombre';
+  const currentGender = user.gender || AuthService.GENDER_OPTIONS[0];
 
-  const genderChipsHtml = AuthService.GENDER_OPTIONS.map(
-    (g) => `
-      <button
-        type="button"
-        class="chip acc-gender-chip ${g === selectedGender ? 'chip--active' : ''}"
-        data-gender="${g}"
-      >
-        ${g}
-      </button>
-    `
+  const genderOptionsHtml = AuthService.GENDER_OPTIONS.map(
+    (g) =>
+      `<option value="${g}" ${g === currentGender ? 'selected' : ''}>${g}</option>`
   ).join('');
 
   showBottomSheet({
@@ -178,14 +172,26 @@ export function openAccountSettingsSheet({ onStateChanged }) {
         </div>
 
         <div class="field">
-          <label class="field__label">Género</label>
-          <div class="chip-row">${genderChipsHtml}</div>
+          <label class="field__label" for="accSelGender">Género</label>
+          <div class="field__box">
+            <select id="accSelGender" class="field__select">
+              ${genderOptionsHtml}
+            </select>
+          </div>
         </div>
 
         <div class="field">
           <label class="field__label" for="accEtBirthYear">Año de nacimiento</label>
           <div class="field__box">
-            <input id="accEtBirthYear" class="field__input" type="number" min="1920" max="2016" value="${user.birthYear || 2000}" />
+            <input
+              id="accEtBirthYear"
+              class="field__input"
+              type="number"
+              min="1920"
+              max="2016"
+              value="${user.birthYear || ''}"
+              placeholder="Ej. 2000"
+            />
           </div>
         </div>
 
@@ -224,15 +230,6 @@ export function openAccountSettingsSheet({ onStateChanged }) {
       </div>
     `,
     onMount: (sheet, close) => {
-      sheet.querySelectorAll('.acc-gender-chip').forEach((chip) => {
-        chip.addEventListener('click', () => {
-          selectedGender = chip.getAttribute('data-gender') || 'Hombre';
-          sheet.querySelectorAll('.acc-gender-chip').forEach((c) => {
-            c.classList.toggle('chip--active', c === chip);
-          });
-        });
-      });
-
       sheet.querySelector('#accBtnChangeFolder')?.addEventListener('click', () => {
         close();
         openFolderSetupModal({
@@ -279,6 +276,9 @@ export function openAccountSettingsSheet({ onStateChanged }) {
         const lastName = sheet.querySelector('#accEtLastName')?.value?.trim() || '';
         const city = sheet.querySelector('#accEtCity')?.value?.trim() || '';
         const country = sheet.querySelector('#accEtCountry')?.value?.trim() || '';
+        const gender =
+          sheet.querySelector('#accSelGender')?.value ||
+          AuthService.GENDER_OPTIONS[0];
         const birthYear = Number(sheet.querySelector('#accEtBirthYear')?.value);
 
         const res = AuthService.updateAccount({
@@ -286,7 +286,7 @@ export function openAccountSettingsSheet({ onStateChanged }) {
           lastName,
           city,
           country,
-          gender: selectedGender,
+          gender,
           birthYear,
         });
 
@@ -310,9 +310,11 @@ export function openAccountSettingsSheet({ onStateChanged }) {
  */
 export function openPreferencesSheet({ onStateChanged }) {
   const prefs = PreferencesService.getPreferences();
-  let selectedTheme = prefs.theme;
+  let selectedTheme = prefs.theme || 'dark';
   let selectedRest = prefs.defaultRestSeconds;
   let selectedWeeklyGoal = prefs.weeklyGoal;
+  const targetWeightValue =
+    prefs.targetWeightKg > 0 ? String(prefs.targetWeightKg) : '';
 
   const restPresets = [30, 60, 90, 120, 180];
   const restChipsHtml = restPresets
@@ -353,7 +355,7 @@ export function openPreferencesSheet({ onStateChanged }) {
           </p>
         </div>
 
-        <!-- Tema Oscuro / Claro -->
+        <!-- Tema Oscuro (predeterminado) / Claro -->
         <div class="field">
           <label class="field__label">Apariencia (Tema)</label>
           <div class="chip-row">
@@ -430,7 +432,7 @@ export function openPreferencesSheet({ onStateChanged }) {
 
         <div class="grid-2col">
           <div class="field">
-            <label class="field__label" for="prefEtTargetWeight">Peso meta</label>
+            <label class="field__label" for="prefEtTargetWeight">Peso meta (Opcional)</label>
             <div class="field__box">
               <input
                 id="prefEtTargetWeight"
@@ -439,7 +441,8 @@ export function openPreferencesSheet({ onStateChanged }) {
                 step="0.5"
                 min="30"
                 max="300"
-                value="${prefs.targetWeightKg}"
+                placeholder="Sin definir"
+                value="${targetWeightValue}"
               />
               <span class="field__suffix">kg</span>
             </div>
@@ -513,15 +516,14 @@ export function openPreferencesSheet({ onStateChanged }) {
       });
 
       sheet.querySelector('#prefBtnCancel')?.addEventListener('click', () => {
-        // Revertir si cambió el tema sin guardar
         PreferencesService.applyThemeToDocument(prefs.theme);
         close();
       });
 
       sheet.querySelector('#prefBtnSave')?.addEventListener('click', () => {
         const restVal = Number(restInput?.value) || selectedRest || 90;
-        const targetWeightKg =
-          Number(sheet.querySelector('#prefEtTargetWeight')?.value) || prefs.targetWeightKg;
+        const rawTarget = sheet.querySelector('#prefEtTargetWeight')?.value?.trim() || '';
+        const targetWeightKg = rawTarget ? Number(rawTarget) : 0;
         const waterGoal =
           Number(sheet.querySelector('#prefEtWaterGoal')?.value) || prefs.waterGoal;
         const soundEnabled = Boolean(sheet.querySelector('#prefChkSound')?.checked);

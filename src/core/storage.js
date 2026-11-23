@@ -12,7 +12,7 @@
 import { Capacitor } from '@capacitor/core';
 import { Directory, Encoding, Filesystem } from '@capacitor/filesystem';
 
-const STORAGE_PREFIX = 'atlas_v2_';
+const STORAGE_PREFIX = 'atlas_v3_';
 const FOLDER_CONFIG_KEY = `${STORAGE_PREFIX}folder_config`;
 const SIMULATE_ANDROID_KEY = `${STORAGE_PREFIX}simulate_android`;
 const DEFAULT_FOLDER_NAME = 'ATLAS_Data';

@@ -1,14 +1,14 @@
 /**
- * Portada de Autenticación Local de ATLAS:
- * 1. Inicio de Sesión (activity_login.xml)
- * 2. Registro Ampliado (activity_register.xml + campos nuevos de la definición funcional v2):
+ * Portada de Autenticación Local de ATLAS (100 % Anaranjada + Pizarra Limpia):
+ * 1. Inicio de Sesión (sin usuarios demo ni botones de autocompletado ficticio).
+ * 2. Registro Ampliado:
  *    - Nombre (obligatorio)
  *    - Apellido (opcional)
  *    - Correo electrónico (obligatorio)
  *    - Contraseña (obligatoria, mín. 6 caracteres)
  *    - Ciudad y País (opcionales por privacidad)
- *    - Género (Hombre, Mujer, Prefiero no decirlo)
- *    - Año de nacimiento
+ *    - Género (Lista desplegable <select> con las 40 opciones oficiales en orden)
+ *    - Año de nacimiento (sin valor pre-rellenado)
  *    - Aceptación de Términos y Condiciones
  */
 
@@ -17,7 +17,6 @@ import { icon } from '../ui/icons.js';
 import { showDialog, showToast } from '../ui/modals.js';
 
 let currentMode = 'login'; // 'login' | 'register'
-let selectedGender = 'Hombre';
 
 /**
  * Abre un diálogo con los Términos y Condiciones y la Política de Privacidad 100 % local.
@@ -28,7 +27,7 @@ function openTermsDialog() {
       <div style="display:flex;flex-direction:column;gap:12px;">
         <h3 class="text-section" style="font-size:19px;">Términos y Privacidad Local</h3>
         <div class="text-body" style="display:flex;flex-direction:column;gap:8px;max-height:50dvh;overflow-y:auto;line-height:1.45;">
-          <p><b>1. Almacenamiento 100 % Local:</b> ATLAS guarda tus credenciales, rutinas, sesiones y métricas únicamente en el almacenamiento local de tu dispositivo. Ningún dato personal se envía a servidores externos.</p>
+          <p><b>1. Almacenamiento 100 % Local:</b> ATLAS guarda tus credenciales, bloques, sesiones y métricas únicamente en el almacenamiento local de tu dispositivo. Ningún dato personal se envía a servidores externos.</p>
           <p><b>2. Privacidad de Ubicación:</b> Los campos de Ciudad y País son completamente opcionales y solo se utilizan para personalizar tu perfil local.</p>
           <p><b>3. Uso Responsable:</b> Los cálculos de volumen, peso y tiempos de descanso son herramientas de apoyo deportivo. Entrena siempre respetando tu técnica y límites físicos.</p>
         </div>
@@ -59,7 +58,7 @@ export function renderAuthScreen(container, { onAuthenticated }) {
 function renderLoginView(container, { onAuthenticated }) {
   container.innerHTML = `
     <div class="auth-screen">
-      <!-- Logo -->
+      <!-- Logo en Naranja -->
       <div class="auth-logo" aria-label="Logo de ATLAS">
         ${icon('ic_fitness_center', { size: 72 })}
       </div>
@@ -118,7 +117,7 @@ function renderLoginView(container, { onAuthenticated }) {
 
         <button
           type="submit"
-          class="btn btn-neon"
+          class="btn btn-primary"
           style="width:100%;min-height:54px;margin-top:16px;"
         >
           INICIAR SESIÓN
@@ -127,17 +126,7 @@ function renderLoginView(container, { onAuthenticated }) {
 
       <!-- Enlace a Registro -->
       <button type="button" id="btnGoToRegister" class="auth-link" style="margin-top:24px;">
-        ¿No tienes cuenta? <span class="auth-link__neon">Regístrate</span>
-      </button>
-
-      <!-- Acceso Rápido Demo -->
-      <button
-        type="button"
-        id="btnFillDemo"
-        style="margin-top:14px;background:none;border:none;color:var(--text-muted);font-size:11px;cursor:pointer;padding:6px;"
-        title="Toca para autocompletar credenciales demo"
-      >
-        Modo demo: admin@atlas.com / 123456 (Toca para rellenar)
+        ¿No tienes cuenta? <span class="auth-link__orange">Regístrate</span>
       </button>
     </div>
   `;
@@ -179,14 +168,6 @@ function renderLoginView(container, { onAuthenticated }) {
     showToast('Tus cuentas se guardan localmente en este dispositivo');
   });
 
-  container.querySelector('#btnFillDemo')?.addEventListener('click', () => {
-    if (emailInput) emailInput.value = 'admin@atlas.com';
-    if (passInput) passInput.value = '123456';
-    clearError(fieldEmail, errEmail);
-    clearError(fieldPass, errPass);
-    showToast('Credenciales demo cargadas');
-  });
-
   container.querySelector('#btnGoToRegister')?.addEventListener('click', () => {
     currentMode = 'register';
     renderAuthScreen(container, { onAuthenticated });
@@ -226,16 +207,8 @@ function renderLoginView(container, { onAuthenticated }) {
 }
 
 function renderRegisterView(container, { onAuthenticated }) {
-  const genderChipsHtml = AuthService.GENDER_OPTIONS.map(
-    (g) => `
-      <button
-        type="button"
-        class="chip gender-chip ${g === selectedGender ? 'chip--active' : ''}"
-        data-gender="${g}"
-      >
-        ${g}
-      </button>
-    `
+  const genderOptionsHtml = AuthService.GENDER_OPTIONS.map(
+    (g) => `<option value="${g}">${g}</option>`
   ).join('');
 
   container.innerHTML = `
@@ -296,27 +269,29 @@ function renderRegisterView(container, { onAuthenticated }) {
           <div class="field">
             <label class="field__label" for="etRegCity">Ciudad (Opcional)</label>
             <div class="field__box">
-              <input id="etRegCity" class="field__input" type="text" placeholder="Ej. Bogotá" />
+              <input id="etRegCity" class="field__input" type="text" placeholder="Opcional" />
             </div>
           </div>
 
           <div class="field">
             <label class="field__label" for="etRegCountry">País (Opcional)</label>
             <div class="field__box">
-              <input id="etRegCountry" class="field__input" type="text" placeholder="Ej. Colombia" />
+              <input id="etRegCountry" class="field__input" type="text" placeholder="Opcional" />
             </div>
           </div>
         </div>
 
-        <!-- Género -->
+        <!-- Género (Lista desplegable con las 40 opciones en orden) -->
         <div class="field">
-          <label class="field__label">Género</label>
-          <div class="chip-row" id="genderChipGroup">
-            ${genderChipsHtml}
+          <label class="field__label" for="selRegGender">Género</label>
+          <div class="field__box">
+            <select id="selRegGender" class="field__select">
+              ${genderOptionsHtml}
+            </select>
           </div>
         </div>
 
-        <!-- Año de nacimiento -->
+        <!-- Año de nacimiento (sin valor pre-rellenado) -->
         <div class="field" id="fieldRegBirthYear">
           <label class="field__label" for="etRegBirthYear">Año de nacimiento *</label>
           <div class="field__box">
@@ -326,8 +301,7 @@ function renderRegisterView(container, { onAuthenticated }) {
               type="number"
               min="1920"
               max="2016"
-              placeholder="Ej. 2001"
-              value="2000"
+              placeholder="Ej. 2000"
             />
           </div>
           <span class="field__error" id="errRegBirthYear" style="display:none;"></span>
@@ -370,6 +344,7 @@ function renderRegisterView(container, { onAuthenticated }) {
   const passInput = container.querySelector('#etRegPassword');
   const cityInput = container.querySelector('#etRegCity');
   const countryInput = container.querySelector('#etRegCountry');
+  const genderSelect = container.querySelector('#selRegGender');
   const birthYearInput = container.querySelector('#etRegBirthYear');
   const termsCheckbox = container.querySelector('#chkRegTerms');
 
@@ -422,15 +397,6 @@ function renderRegisterView(container, { onAuthenticated }) {
   birthYearInput?.addEventListener('input', () => clearFieldError('birthYear'));
   termsCheckbox?.addEventListener('change', () => clearFieldError('acceptedTerms'));
 
-  container.querySelectorAll('.gender-chip').forEach((chip) => {
-    chip.addEventListener('click', () => {
-      selectedGender = chip.getAttribute('data-gender') || 'Hombre';
-      container.querySelectorAll('.gender-chip').forEach((c) => {
-        c.classList.toggle('chip--active', c === chip);
-      });
-    });
-  });
-
   container.querySelector('#btnToggleRegPass')?.addEventListener('click', (e) => {
     if (!passInput) return;
     const isPass = passInput.type === 'password';
@@ -464,7 +430,7 @@ function renderRegisterView(container, { onAuthenticated }) {
       password: passInput?.value || '',
       city: cityInput?.value || '',
       country: countryInput?.value || '',
-      gender: selectedGender,
+      gender: genderSelect?.value || AuthService.GENDER_OPTIONS[0],
       birthYear: birthYearInput?.value || '',
       acceptedTerms: Boolean(termsCheckbox?.checked),
     });

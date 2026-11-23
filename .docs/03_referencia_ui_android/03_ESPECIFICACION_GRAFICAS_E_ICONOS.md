@@ -177,3 +177,10 @@ Para mantener la coherencia visual y funcional de las tarjetas de rutina y del s
    * `Sentadilla Trasera`, `Prensa de Piernas 45°`, `Extensiones de Cuádriceps`, `Curl Femoral Tumbado`, `Hip Thrust con Barra`, `Elevación de Talones (Gemelos)`.
 4. **`Día 4: Torso Completo`** — `"Pectoral, Dorsales y Deltoides"` (`5 ejercicios • 55 min`):
    * `Press de Banca Plano`, `Remo Gironda (Polea Baja)`, `Press Militar con Mancuernas`, `Aperturas en Polea (Cruces)`, `Face Pulls`.
+
+---
+
+## 4. Actualización del Catálogo Base y Semilla (Iteración #11 — 23 nov 2026)
+
+* **Eliminación de las 4 rutinas/bloques semilla:** La aplicación inicia con `0` bloques pre-cargados (`[]`) para que el usuario cree los suyos desde cero.
+* **Ampliación del Catálogo Base a 50 Ejercicios Fundamentales Reales:** Se incorporaron variantes específicas por grupo muscular (*Press de banca en banco plano*, *Press plano con mancuernas*, *Press inclinado en banco con barra*, *Press inclinado con mancuernas*, *Press de pecho en máquina*, *Jalón dorsal*, *Jalón dorsal con agarre ancho*, *Jalón dorsal unilateral*, *Jalón dorsal con agarre neutro / cerrado*, *Press militar con mancuernas*, *Press militar en máquina*, *Press militar con barra*, *Sentadilla libre con barra*, *Sentadilla en multipower*, *Sentadilla búlgara*, *Peso muerto convencional*, *Peso muerto rumano*, etc.), manteniendo siempre activa la opción **"+ Crear ejercicio propio"**.

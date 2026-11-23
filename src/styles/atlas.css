@@ -1,10 +1,10 @@
 /* ==========================================================================
-   ATLAS Design System — Basado en .docs/03_referencia_ui_android/
+   ATLAS Design System — Identidad Monocromática Oscura + Naranja (#FF9100)
    ========================================================================== */
 
 :root,
 :root[data-theme="dark"] {
-  /* 1. Fondos y Superficies */
+  /* 1. Fondos y Superficies (Tema Oscuro Predeterminado) */
   --bg-dark: #0E1117;
   --surface-dark: #161B22;
   --surface-card: #212631;
@@ -15,16 +15,20 @@
   --nav-divider: #262C38;
   --chart-grid: #2A303C;
 
-  /* 2. Acentos y Estados */
+  /* 2. Paleta de Acentos 100 % Anaranjada (#FF9100 y variantes) */
   --accent-orange: #FF9100;
+  --accent-orange-light: #FFA726;
+  --accent-orange-deep: #F57C00;
   --accent-orange-glow: rgba(255, 145, 0, 0.20);
   --accent-orange-dim: rgba(255, 145, 0, 0.40);
-  --primary-neon: #00E676;
-  --primary-neon-glow: rgba(0, 230, 118, 0.20);
-  --accent-cyan: #00E5FF;
+
+  /* Unificación de todos los acentos funcionales a la familia naranja */
+  --primary-neon: #FF9100;
+  --primary-neon-glow: rgba(255, 145, 0, 0.20);
+  --accent-cyan: #FF9100;
+  --set-completed: rgba(255, 145, 0, 0.18);
+  --set-completed-stroke: #FF9100;
   --accent-red: #FF5252;
-  --set-completed: #1B382B;
-  --set-completed-stroke: #00E676;
 
   /* 3. Jerarquía de Texto */
   --text-primary: #F0F3F6;
@@ -33,13 +37,13 @@
   --text-on-accent: #0E1117;
   --white: #FFFFFF;
 
-  /* 4. Colores por Grupo Muscular */
+  /* 4. Colores por Grupo Muscular (Gama Monocromática Anaranjada) */
   --group-pecho: #FF9100;
-  --group-espalda: #4FC3F7;
-  --group-pierna: #B388FF;
+  --group-espalda: #FFA726;
+  --group-pierna: #FB8C00;
   --group-hombro: #FF9100;
-  --group-brazos: #FF5252;
-  --group-core: #FFD740;
+  --group-brazos: #F57C00;
+  --group-core: #FFB74D;
 
   /* 5. Geometría y Tipografía */
   --radius-card: 18px;
@@ -49,6 +53,45 @@
   --radius-compact: 8px;
   --radius-pill: 20px;
   --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+/* ==========================================================================
+   Tema Claro Opcional (Acentos 100 % Anaranjados sobre Superficie Clara)
+   ========================================================================== */
+:root[data-theme="light"] {
+  --bg-dark: #F4F6F9;
+  --surface-dark: #FFFFFF;
+  --surface-card: #FFFFFF;
+  --surface-card-stroke: #DCE1E8;
+  --surface-input: #EEF1F6;
+  --surface-pressed: #E4E9F1;
+  --surface-danger: #FFF0F0;
+  --nav-divider: #E1E6EE;
+  --chart-grid: #E2E7F0;
+
+  --accent-orange: #F57C00;
+  --accent-orange-light: #FF9100;
+  --accent-orange-deep: #E65100;
+  --accent-orange-glow: rgba(245, 124, 0, 0.16);
+  --accent-orange-dim: rgba(245, 124, 0, 0.42);
+  --primary-neon: #F57C00;
+  --primary-neon-glow: rgba(245, 124, 0, 0.16);
+  --accent-cyan: #F57C00;
+  --set-completed: rgba(245, 124, 0, 0.16);
+  --set-completed-stroke: #F57C00;
+  --accent-red: #E53935;
+
+  --group-pecho: #F57C00;
+  --group-espalda: #FB8C00;
+  --group-pierna: #EF6C00;
+  --group-hombro: #F57C00;
+  --group-brazos: #E65100;
+  --group-core: #FFA726;
+
+  --text-primary: #111827;
+  --text-secondary: #4B5563;
+  --text-muted: #6B7280;
+  --text-on-accent: #FFFFFF;
 }
 
 /* ==========================================================================
@@ -195,7 +238,7 @@ body {
 }
 
 /* ==========================================================================
-   Botones (Atlas.Button.*)
+   Botones (Atlas.Button.* — 100 % Anaranjados)
    ========================================================================== */
 .btn {
   display: inline-flex;
@@ -220,19 +263,11 @@ body {
   cursor: not-allowed;
 }
 
-.btn-primary {
-  min-height: 52px;
-  padding: 0 20px;
-  background-color: var(--accent-orange);
-  color: var(--text-on-accent);
-  font-size: 15px;
-  border-radius: var(--radius-btn);
-}
-
+.btn-primary,
 .btn-neon {
   min-height: 52px;
   padding: 0 20px;
-  background-color: var(--primary-neon);
+  background-color: var(--accent-orange);
   color: var(--text-on-accent);
   font-size: 15px;
   border-radius: var(--radius-btn);
@@ -279,7 +314,7 @@ body {
   border-radius: 50%;
   background-color: transparent;
   border: 1px solid var(--surface-card-stroke);
-  color: var(--text-primary);
+  color: var(--accent-orange);
   font-size: 20px;
 }
 
@@ -294,7 +329,7 @@ body {
 }
 
 /* ==========================================================================
-   Campos de Texto (Atlas.TextInputLayout & Compact Input)
+   Campos de Texto, Select Desplegable e Inputs Compactos
    ========================================================================== */
 .field {
   display: flex;
@@ -310,7 +345,7 @@ body {
 }
 
 .field:focus-within .field__label {
-  color: var(--primary-neon);
+  color: var(--accent-orange);
 }
 
 .field__box {
@@ -325,8 +360,8 @@ body {
 }
 
 .field__box:focus-within {
-  border-color: var(--primary-neon);
-  box-shadow: 0 0 0 1px var(--primary-neon);
+  border-color: var(--accent-orange);
+  box-shadow: 0 0 0 1px var(--accent-orange);
 }
 
 .field--error .field__label {
@@ -352,6 +387,25 @@ body {
 
 .field__input::placeholder {
   color: var(--text-muted);
+}
+
+.field__select {
+  flex: 1;
+  width: 100%;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 15px;
+  padding: 12px 0;
+  cursor: pointer;
+}
+
+.field__select option {
+  background-color: var(--surface-dark);
+  color: var(--text-primary);
+  padding: 8px;
 }
 
 .field__suffix {
@@ -381,11 +435,11 @@ body {
 }
 
 .input-compact:focus {
-  border-color: var(--primary-neon);
+  border-color: var(--accent-orange);
 }
 
 /* ==========================================================================
-   Chips, Píldoras, Avatares y Barras de Progreso
+   Chips, Píldoras, Avatares y Barras de Progreso (100 % Naranja)
    ========================================================================== */
 .chip-row {
   display: flex;
@@ -463,6 +517,7 @@ body {
   height: 44px;
   border-radius: 12px;
   background-color: var(--surface-input);
+  color: var(--accent-orange);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -477,15 +532,12 @@ body {
   overflow: hidden;
 }
 
-.progress-linear__bar {
+.progress-linear__bar,
+.progress-linear__bar--cyan {
   height: 100%;
   background-color: var(--accent-orange);
   border-radius: 4px;
   transition: width 0.25s ease;
-}
-
-.progress-linear__bar--cyan {
-  background-color: var(--accent-cyan);
 }
 
 /* Círculos de día de la semana (34x34px) */
@@ -512,7 +564,7 @@ body {
   color: var(--text-on-accent);
 }
 
-/* Botón Check de Serie (40x38px) */
+/* Botón Check de Serie (40x38px en Naranja) */
 .set-check-btn {
   width: 40px;
   height: 38px;
@@ -528,8 +580,8 @@ body {
 }
 
 .set-check-btn--done {
-  background-color: var(--primary-neon);
-  border-color: var(--primary-neon);
+  background-color: var(--accent-orange);
+  border-color: var(--accent-orange);
   color: var(--text-on-accent);
 }
 
@@ -614,15 +666,8 @@ body {
 }
 
 /* ==========================================================================
-   Modales: BottomSheet, Diálogo (88% ancho) y Toast
+   Sistema de Modales En Vivo (Dialog 88%, BottomSheet y Toasts)
    ========================================================================== */
-.sheet-preview {
-  background-color: var(--surface-dark);
-  border: 1px solid var(--surface-card-stroke);
-  border-radius: 24px 24px 18px 18px;
-  padding: 12px 24px 24px;
-}
-
 .sheet-handle {
   width: 40px;
   height: 4px;
@@ -631,31 +676,6 @@ body {
   margin: 0 auto 18px;
 }
 
-.dialog-preview {
-  width: 88%;
-  margin: 0 auto;
-  background-color: var(--surface-card);
-  border: 1px solid var(--surface-card-stroke);
-  border-radius: var(--radius-tile);
-  padding: 24px;
-}
-
-.toast-preview {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background-color: var(--surface-card);
-  border: 1px solid var(--surface-card-stroke);
-  border-radius: 999px;
-  padding: 10px 18px;
-  color: var(--text-primary);
-  font-size: 13px;
-  font-weight: 600;
-}
-
-/* ==========================================================================
-   Sistema de Modales En Vivo (Dialog 88%, BottomSheet y Toasts)
-   ========================================================================== */
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -732,8 +752,8 @@ body {
 }
 
 .toast--success {
-  border-color: var(--primary-neon);
-  color: var(--primary-neon);
+  border-color: var(--accent-orange);
+  color: var(--accent-orange);
 }
 
 .toast--error {
@@ -757,7 +777,7 @@ body {
 }
 
 /* ==========================================================================
-   Portada: Login y Registro Ampliado (activity_login.xml & activity_register.xml)
+   Portada: Login y Registro Ampliado (100 % Naranja)
    ========================================================================== */
 .auth-screen {
   width: 100%;
@@ -777,7 +797,7 @@ body {
 .auth-logo {
   width: 72px;
   height: 72px;
-  color: var(--primary-neon);
+  color: var(--accent-orange);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -787,7 +807,7 @@ body {
   margin: 2px 0 0;
   font-size: 13px;
   font-weight: 700;
-  color: var(--primary-neon);
+  color: var(--accent-orange);
   letter-spacing: 0.08em;
 }
 
@@ -829,10 +849,10 @@ body {
 .field__toggle-btn {
   background: transparent;
   border: none;
-  color: var(--text-secondary);
+  color: var(--accent-orange);
   font-family: inherit;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   padding: 6px 4px;
   margin-left: 6px;
@@ -849,11 +869,7 @@ body {
   text-align: center;
 }
 
-.auth-link__neon {
-  color: var(--primary-neon);
-  font-weight: 700;
-}
-
+.auth-link__neon,
 .auth-link__orange {
   color: var(--accent-orange);
   font-weight: 700;
@@ -893,34 +909,6 @@ body {
   font-family: inherit;
   font-size: inherit;
   cursor: pointer;
-}
-
-/* ==========================================================================
-   Tema Claro Oficial (Resolución de H-02: :root[data-theme="light"])
-   ========================================================================== */
-:root[data-theme="light"] {
-  --bg-dark: #F4F6F9;
-  --surface-dark: #FFFFFF;
-  --surface-card: #FFFFFF;
-  --surface-card-stroke: #DCE1E8;
-  --surface-input: #EEF1F6;
-  --surface-pressed: #E4E9F1;
-  --surface-danger: #FFF0F0;
-  --nav-divider: #E1E6EE;
-  --chart-grid: #E2E7F0;
-
-  --accent-orange: #F57C00;
-  --accent-orange-glow: rgba(245, 124, 0, 0.16);
-  --accent-orange-dim: rgba(245, 124, 0, 0.42);
-  --primary-neon: #00C853;
-  --primary-neon-glow: rgba(0, 200, 83, 0.16);
-  --accent-cyan: #00ACC1;
-  --accent-red: #E53935;
-
-  --text-primary: #111827;
-  --text-secondary: #4B5563;
-  --text-muted: #6B7280;
-  --text-on-accent: #FFFFFF;
 }
 
 /* ==========================================================================
@@ -1062,7 +1050,7 @@ body {
 
 .card-improvised {
   background: linear-gradient(135deg, var(--surface-card) 0%, var(--surface-input) 100%);
-  border: 1px solid var(--primary-neon);
+  border: 1px solid var(--accent-orange);
   border-radius: var(--radius-card);
   padding: 18px;
   display: flex;
@@ -1082,7 +1070,7 @@ body {
   height: 34px;
   border-radius: 8px;
   background-color: var(--surface-input);
-  color: var(--text-secondary);
+  color: var(--accent-orange);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1109,7 +1097,7 @@ body {
 }
 
 /* ==========================================================================
-   Pestaña 2 (Rutinas) y Motor de Sesión en Vivo (activity_main.xml)
+   Pestaña 2 (Rutinas) y Motor de Sesión en Vivo
    ========================================================================== */
 .workout-live {
   width: 100%;
@@ -1135,7 +1123,7 @@ body {
 .workout-brand-tag {
   font-size: 11px;
   font-weight: 800;
-  color: var(--primary-neon);
+  color: var(--accent-orange);
   letter-spacing: 0.1em;
 }
 
@@ -1235,6 +1223,10 @@ body {
   background-color: var(--surface-input);
   border: 1px solid var(--surface-card-stroke);
   border-radius: 10px;
+}
+
+.picker-search-box:focus-within {
+  border-color: var(--accent-orange);
 }
 
 .picker-search-box input {

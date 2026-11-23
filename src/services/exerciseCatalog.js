@@ -1,6 +1,10 @@
 /**
- * Catálogo de Ejercicios Base (29 ejercicios en 6 grupos musculares) +
+ * Catálogo Base de Ejercicios Fundamentales Reales (50 ejercicios en 6 grupos musculares) +
  * Creación de Ejercicios Propios personalizados por el usuario.
+ *
+ * Incluye variantes específicas de press de banca, press con mancuernas, press militar,
+ * jalón dorsal (agarre ancho, unilateral, estándar, cerrado), remos, sentadillas, peso muerto,
+ * curls y extensiones, con acentos 100 % en gama anaranjada.
  */
 
 import { getCollection, saveCollection } from '../core/storage.js';
@@ -27,57 +31,78 @@ export const EQUIPMENT_TYPES = [
   'Otro',
 ];
 
-/** Color hexadecimal de acento por grupo muscular (extraído de MuscleStyle.kt). */
+/** Gama monocromática anaranjada por grupo muscular. */
 export const MUSCLE_COLORS = {
   Pecho: '#FF9100',
-  Espalda: '#4FC3F7',
-  Pierna: '#B388FF',
+  Espalda: '#FFA726',
+  Pierna: '#FB8C00',
   Hombro: '#FF9100',
-  Brazos: '#FF5252',
-  Core: '#FFD740',
+  Brazos: '#F57C00',
+  Core: '#FFB74D',
 };
 
 export const BASE_EXERCISES = [
-  // Pecho (5)
-  { id: '1', name: 'Press de Banca Plano', muscleGroup: 'Pecho', equipment: 'Barra', isCustom: false },
-  { id: '2', name: 'Press Inclinado con Mancuernas', muscleGroup: 'Pecho', equipment: 'Mancuerna', isCustom: false },
-  { id: '3', name: 'Aperturas en Polea (Cruces)', muscleGroup: 'Pecho', equipment: 'Polea', isCustom: false },
-  { id: '4', name: 'Fondos en Paralelas (Dips)', muscleGroup: 'Pecho', equipment: 'Peso Corporal', isCustom: false },
-  { id: '5', name: 'Press en Máquina Pecho', muscleGroup: 'Pecho', equipment: 'Máquina', isCustom: false },
+  // 1. PECHO (9)
+  { id: 'ex_1', name: 'Press de banca en banco plano', muscleGroup: 'Pecho', equipment: 'Barra', isCustom: false },
+  { id: 'ex_2', name: 'Press plano con mancuernas', muscleGroup: 'Pecho', equipment: 'Mancuerna', isCustom: false },
+  { id: 'ex_3', name: 'Press inclinado en banco con barra', muscleGroup: 'Pecho', equipment: 'Barra', isCustom: false },
+  { id: 'ex_4', name: 'Press inclinado con mancuernas', muscleGroup: 'Pecho', equipment: 'Mancuerna', isCustom: false },
+  { id: 'ex_5', name: 'Press declinado en banco', muscleGroup: 'Pecho', equipment: 'Barra', isCustom: false },
+  { id: 'ex_6', name: 'Press de pecho en máquina', muscleGroup: 'Pecho', equipment: 'Máquina', isCustom: false },
+  { id: 'ex_7', name: 'Aperturas con mancuernas en banco plano', muscleGroup: 'Pecho', equipment: 'Mancuerna', isCustom: false },
+  { id: 'ex_8', name: 'Aperturas en polea (Cruces)', muscleGroup: 'Pecho', equipment: 'Polea', isCustom: false },
+  { id: 'ex_9', name: 'Contractor de pecho (Pec Deck)', muscleGroup: 'Pecho', equipment: 'Máquina', isCustom: false },
+  { id: 'ex_10', name: 'Fondos en paralelas (Dips)', muscleGroup: 'Pecho', equipment: 'Peso Corporal', isCustom: false },
 
-  // Espalda (5)
-  { id: '6', name: 'Peso Muerto Convencional', muscleGroup: 'Espalda', equipment: 'Barra', isCustom: false },
-  { id: '7', name: 'Jalón al Pecho (Lat Pulldown)', muscleGroup: 'Espalda', equipment: 'Polea', isCustom: false },
-  { id: '8', name: 'Remo con Barra', muscleGroup: 'Espalda', equipment: 'Barra', isCustom: false },
-  { id: '9', name: 'Remo Gironda (Polea Baja)', muscleGroup: 'Espalda', equipment: 'Polea', isCustom: false },
-  { id: '10', name: 'Dominadas (Pull-ups)', muscleGroup: 'Espalda', equipment: 'Peso Corporal', isCustom: false },
+  // 2. ESPALDA (11)
+  { id: 'ex_11', name: 'Jalón dorsal', muscleGroup: 'Espalda', equipment: 'Polea', isCustom: false },
+  { id: 'ex_12', name: 'Jalón dorsal con agarre ancho', muscleGroup: 'Espalda', equipment: 'Polea', isCustom: false },
+  { id: 'ex_13', name: 'Jalón dorsal unilateral', muscleGroup: 'Espalda', equipment: 'Polea', isCustom: false },
+  { id: 'ex_14', name: 'Jalón dorsal con agarre neutro / cerrado', muscleGroup: 'Espalda', equipment: 'Polea', isCustom: false },
+  { id: 'ex_15', name: 'Remo con barra', muscleGroup: 'Espalda', equipment: 'Barra', isCustom: false },
+  { id: 'ex_16', name: 'Remo unilateral con mancuerna', muscleGroup: 'Espalda', equipment: 'Mancuerna', isCustom: false },
+  { id: 'ex_17', name: 'Remo en polea baja (Gironda)', muscleGroup: 'Espalda', equipment: 'Polea', isCustom: false },
+  { id: 'ex_18', name: 'Remo en máquina', muscleGroup: 'Espalda', equipment: 'Máquina', isCustom: false },
+  { id: 'ex_19', name: 'Pull-over en polea alta', muscleGroup: 'Espalda', equipment: 'Polea', isCustom: false },
+  { id: 'ex_20', name: 'Dominadas (Pull-ups)', muscleGroup: 'Espalda', equipment: 'Peso Corporal', isCustom: false },
+  { id: 'ex_21', name: 'Peso muerto convencional', muscleGroup: 'Espalda', equipment: 'Barra', isCustom: false },
 
-  // Pierna (6)
-  { id: '11', name: 'Sentadilla Trasera', muscleGroup: 'Pierna', equipment: 'Barra', isCustom: false },
-  { id: '12', name: 'Prensa de Piernas 45°', muscleGroup: 'Pierna', equipment: 'Máquina', isCustom: false },
-  { id: '13', name: 'Extensiones de Cuádriceps', muscleGroup: 'Pierna', equipment: 'Máquina', isCustom: false },
-  { id: '14', name: 'Curl Femoral Tumbado', muscleGroup: 'Pierna', equipment: 'Máquina', isCustom: false },
-  { id: '15', name: 'Elevación de Talones (Gemelos)', muscleGroup: 'Pierna', equipment: 'Máquina', isCustom: false },
-  { id: '16', name: 'Hip Thrust con Barra', muscleGroup: 'Pierna', equipment: 'Barra', isCustom: false },
+  // 3. HOMBRO (9)
+  { id: 'ex_22', name: 'Press militar con mancuernas', muscleGroup: 'Hombro', equipment: 'Mancuerna', isCustom: false },
+  { id: 'ex_23', name: 'Press militar en máquina', muscleGroup: 'Hombro', equipment: 'Máquina', isCustom: false },
+  { id: 'ex_24', name: 'Press militar con barra', muscleGroup: 'Hombro', equipment: 'Barra', isCustom: false },
+  { id: 'ex_25', name: 'Press Arnold con mancuernas', muscleGroup: 'Hombro', equipment: 'Mancuerna', isCustom: false },
+  { id: 'ex_26', name: 'Elevaciones laterales con mancuernas', muscleGroup: 'Hombro', equipment: 'Mancuerna', isCustom: false },
+  { id: 'ex_27', name: 'Elevaciones laterales en polea', muscleGroup: 'Hombro', equipment: 'Polea', isCustom: false },
+  { id: 'ex_28', name: 'Elevaciones frontales con mancuernas', muscleGroup: 'Hombro', equipment: 'Mancuerna', isCustom: false },
+  { id: 'ex_29', name: 'Pájaros (Deltoides posterior)', muscleGroup: 'Hombro', equipment: 'Mancuerna', isCustom: false },
+  { id: 'ex_30', name: 'Face Pull en polea', muscleGroup: 'Hombro', equipment: 'Polea', isCustom: false },
 
-  // Hombro (5)
-  { id: '17', name: 'Press Militar con Barra', muscleGroup: 'Hombro', equipment: 'Barra', isCustom: false },
-  { id: '18', name: 'Press Militar con Mancuernas', muscleGroup: 'Hombro', equipment: 'Mancuerna', isCustom: false },
-  { id: '19', name: 'Elevaciones Laterales', muscleGroup: 'Hombro', equipment: 'Mancuerna', isCustom: false },
-  { id: '20', name: 'Pájaros (Deltoides Posterior)', muscleGroup: 'Hombro', equipment: 'Mancuerna', isCustom: false },
-  { id: '21', name: 'Face Pulls', muscleGroup: 'Hombro', equipment: 'Polea', isCustom: false },
+  // 4. PIERNA (11)
+  { id: 'ex_31', name: 'Sentadilla libre con barra', muscleGroup: 'Pierna', equipment: 'Barra', isCustom: false },
+  { id: 'ex_32', name: 'Sentadilla en multipower (Smith)', muscleGroup: 'Pierna', equipment: 'Máquina', isCustom: false },
+  { id: 'ex_33', name: 'Sentadilla búlgara con mancuernas', muscleGroup: 'Pierna', equipment: 'Mancuerna', isCustom: false },
+  { id: 'ex_34', name: 'Sentadilla Hack en máquina', muscleGroup: 'Pierna', equipment: 'Máquina', isCustom: false },
+  { id: 'ex_35', name: 'Prensa de piernas 45°', muscleGroup: 'Pierna', equipment: 'Máquina', isCustom: false },
+  { id: 'ex_36', name: 'Extensiones de cuádriceps en máquina', muscleGroup: 'Pierna', equipment: 'Máquina', isCustom: false },
+  { id: 'ex_37', name: 'Peso muerto rumano', muscleGroup: 'Pierna', equipment: 'Barra', isCustom: false },
+  { id: 'ex_38', name: 'Curl femoral tumbado en máquina', muscleGroup: 'Pierna', equipment: 'Máquina', isCustom: false },
+  { id: 'ex_39', name: 'Curl femoral sentado en máquina', muscleGroup: 'Pierna', equipment: 'Máquina', isCustom: false },
+  { id: 'ex_40', name: 'Hip Thrust con barra', muscleGroup: 'Pierna', equipment: 'Barra', isCustom: false },
+  { id: 'ex_41', name: 'Elevación de talones (Gemelos)', muscleGroup: 'Pierna', equipment: 'Máquina', isCustom: false },
 
-  // Brazos (5)
-  { id: '22', name: 'Curl de Bíceps con Barra Z', muscleGroup: 'Brazos', equipment: 'Barra', isCustom: false },
-  { id: '23', name: 'Curl en Banco Scott (Predicador)', muscleGroup: 'Brazos', equipment: 'Máquina', isCustom: false },
-  { id: '24', name: 'Curl Martillo con Mancuernas', muscleGroup: 'Brazos', equipment: 'Mancuerna', isCustom: false },
-  { id: '25', name: 'Extensiones de Tríceps en Polea', muscleGroup: 'Brazos', equipment: 'Polea', isCustom: false },
-  { id: '26', name: 'Press Francés', muscleGroup: 'Brazos', equipment: 'Barra', isCustom: false },
+  // 5. BRAZOS (6)
+  { id: 'ex_42', name: 'Curl de bíceps con barra Z', muscleGroup: 'Brazos', equipment: 'Barra', isCustom: false },
+  { id: 'ex_43', name: 'Curl de bíceps con mancuernas', muscleGroup: 'Brazos', equipment: 'Mancuerna', isCustom: false },
+  { id: 'ex_44', name: 'Curl martillo con mancuernas', muscleGroup: 'Brazos', equipment: 'Mancuerna', isCustom: false },
+  { id: 'ex_45', name: 'Curl de bíceps en banco Scott (Predicador)', muscleGroup: 'Brazos', equipment: 'Máquina', isCustom: false },
+  { id: 'ex_46', name: 'Extensiones de tríceps en polea', muscleGroup: 'Brazos', equipment: 'Polea', isCustom: false },
+  { id: 'ex_47', name: 'Press francés de tríceps', muscleGroup: 'Brazos', equipment: 'Barra', isCustom: false },
 
-  // Core (3)
-  { id: '27', name: 'Plancha Abdominal', muscleGroup: 'Core', equipment: 'Peso Corporal', isCustom: false },
-  { id: '28', name: 'Elevaciones de Piernas Colgado', muscleGroup: 'Core', equipment: 'Peso Corporal', isCustom: false },
-  { id: '29', name: 'Crunch en Polea Alta', muscleGroup: 'Core', equipment: 'Polea', isCustom: false },
+  // 6. CORE (4)
+  { id: 'ex_48', name: 'Plancha abdominal', muscleGroup: 'Core', equipment: 'Peso Corporal', isCustom: false },
+  { id: 'ex_49', name: 'Crunch abdominal en polea alta', muscleGroup: 'Core', equipment: 'Polea', isCustom: false },
+  { id: 'ex_50', name: 'Elevaciones de piernas colgado', muscleGroup: 'Core', equipment: 'Peso Corporal', isCustom: false },
 ];
 
 /**
@@ -89,7 +114,7 @@ export function getCustomExercises() {
 }
 
 /**
- * Devuelve el catálogo completo (29 base + ejercicios propios del usuario).
+ * Devuelve el catálogo completo (50 ejercicios base + ejercicios propios del usuario).
  */
 export function getAllExercises() {
   return [...BASE_EXERCISES, ...getCustomExercises()];
@@ -177,7 +202,7 @@ export function createCustomExercise({
 }
 
 /**
- * Devuelve el color hexadecimal correspondiente a un grupo muscular.
+ * Devuelve el color hexadecimal correspondiente a un grupo muscular (gama naranja).
  * @param {string} [group]
  * @returns {string}
  */

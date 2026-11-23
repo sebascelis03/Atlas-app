@@ -156,3 +156,19 @@ El proyecto nació en Android Studio con Kotlin (versión académica, conservada
 1. **Fidelidad estética** a `.docs/03_referencia_ui_android/`.
 2. **Pizarra limpia:** ningún dato ficticio precargado; los indicadores se calculan a partir de fechas reales (`yyyy-MM-dd`).
 3. **Local-first:** todo el estado vive en el dispositivo.
+
+---
+
+## 10. Actualización de Identidad y Datos Iniciales (Iteración #11 — 23 nov 2026)
+
+1. **Paleta 100 % Anaranjada sobre Tema Oscuro Predeterminado:**
+   * El tema oscuro (`dark`) viene activo por defecto al iniciar la aplicación.
+   * Todos los acentos interactivos, botones primarios, barras de progreso (meta semanal, agua), checks de serie completada, bordes de foco, íconos y franjas de grupos musculares utilizan exclusivamente la familia anaranjada (`#FF9100`, `#FFA726`, `#FB8C00`, `rgba(255, 145, 0, 0.20)`), eliminando el verde neón y el cian.
+2. **Cero Bloques Pre-cargados:**
+   * La aplicación inicia con `0` bloques creados (`[]`). El usuario crea sus propios bloques con nombre libre desde cero.
+3. **Catálogo Base de 50 Ejercicios Fundamentales Reales + Creación Personalizada:**
+   * Incluye 50 ejercicios reales clasificados en los 6 grupos musculares con sus variantes específicas (*Press de banca en banco plano*, *Press plano con mancuernas*, *Press militar con mancuernas*, *Press militar en máquina*, *Jalón dorsal con agarre ancho*, *Jalón dorsal unilateral*, *Jalón dorsal*, etc.), además del botón permanente **"+ Crear ejercicio propio"**.
+4. **Cero Datos Pre-rellenados / Sin Datos Demo:**
+   * Sin usuarios demo pre-cargados, sin botones de autocompletado ficticio y sin pesos ni metas pre-rellenadas.
+5. **Lista Desplegable (`<select>`) de Género con 40 Opciones:**
+   * Tanto en Registro como en Configuración de Cuenta, el campo Género utiliza un `<select>` estilizado con las 40 opciones oficiales en orden.
