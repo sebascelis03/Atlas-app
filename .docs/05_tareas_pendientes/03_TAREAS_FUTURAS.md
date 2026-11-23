@@ -3,17 +3,24 @@
 Estas tareas **no se tocarán** hasta completar y aprobar la tarea activa.
 
 ## 1. Hoja de ruta por planes
-1. **Plan #4 — Capa de datos y almacenamiento híbrido:** adaptador común (Android-carpeta / Web-localStorage/IndexedDB), separación por usuario, utilidades de fecha y servicios de dominio (Auth, Bloques, Catálogo + ejercicios propios, Sesiones, Registro diario, Preferencias). **Resuelve H-01.**
-2. **Plan #5 — Portada:** Login y Registro ampliado (Nombre, Apellido, Correo, Contraseña, Ciudad, País, Género, Año de nacimiento, Términos) y modal de primera ejecución para elegir la carpeta (solo Android).
-3. **Plan #6 — Estructura de navegación:** Header con logo y menú de perfil (Configuración de cuenta, Preferencias, Cerrar sesión) y barra inferior de 3 pestañas. **Resuelve H-02** (tema claro).
-4. **Plan #7 — Pestaña Inicio:** acceso rápido a bloques, "Iniciar rutina improvisada", registro de agua y de peso del día.
-5. **Plan #8 — Pestaña Rutinas (Bloques) y Sesión en vivo:** CRUD de bloques, catálogo con buscador, "Crear ejercicio propio", series (kg, reps, cantidad, duración), descanso programable con alarma sutil, cambiar ejercicio, agregar y finalizar antes. **Resuelve H-03.**
-6. **Plan #9 — Dashboard:** filtros de tiempo, métricas, gráficas Canvas (barras, línea, calendario), historial de sesiones y récords.
-7. **Plan #10 — Exportación `.apk`:** plataforma Android de Capacitor, íconos de la app, script de compilación por terminal y prueba del instalador.
+1. **Plan #7 — Pestaña 1: Inicio (`src/screens/tabs/HomeTab.js`):**
+   * Saludo dinámico, meta semanal rápida y tira de la semana (`L-D`).
+   * Acceso rápido para iniciar un bloque guardado.
+   * Botón destacado **"Iniciar rutina improvisada"** (abre sesión en vivo vacía para ir agregando ejercicios sobre la marcha con el buscador).
+   * Registros diarios rápidos de **vasos de agua** (`±` con barra cian) y **peso corporal** (`±0.5 kg` y diálogo de peso exacto).
+2. **Plan #8 — Pestaña 2: Rutinas (Bloques) y Motor de Sesión en Vivo (Resuelve H-03):**
+   * Gestión de bloques con nombre libre y sin días fijos (filtros por grupo muscular, vista previa, crear, editar, eliminar).
+   * Selector de ejercicios con buscador, filtro por músculo y **"Crear ejercicio propio"**.
+   * Sesión en vivo (`src/screens/WorkoutLiveScreen.js`): cronómetro, tabla de series (`SERIE`, `ANTERIOR`, `KG`, `REPS`, `✓`), **temporizador de descanso programable con alarma sutil (Web Audio API) y vibración**, **cambiar ejercicio** sobre la marcha, agregar nuevos ejercicios y **finalizar antes** guardando todo lo registrado.
+3. **Plan #9 — Pestaña 3: Dashboard y Gráficas Canvas 2D:**
+   * Implementación en HTML5 Canvas 2D de `BarChart`, `LineChart` y `ActivityCalendar`.
+   * Panel analítico con filtros de tiempo (`7 días`, `30 días`, `90 días`), métricas de progreso, gráficas de volumen y entrenamientos, evolución del peso diario, calendario de actividad, historial detallado de sesiones y récords personales.
+4. **Plan #10 — Integración de Capacitor Android y Exportación del `.apk`:**
+   * Adición de la plataforma `@capacitor/android` (`com.proyecto.atlas`), configuración de recursos e íconos, script de compilación directa por terminal y verificación del archivo `.apk`.
 
-## 2. Hallazgos técnicos pendientes
-| ID | Hallazgo | Detalle | Se resuelve en |
+## 2. Hallazgos técnicos
+| ID | Hallazgo | Estado | Se resuelve en |
 | :--- | :--- | :--- | :--- |
-| **H-01** | Carpeta local en Android (SAF) | Desde Android 10 rige el *scoped storage*. Para que el usuario elija una carpeta hay que usar el Storage Access Framework (`ACTION_OPEN_DOCUMENT_TREE`), que `@capacitor/filesystem` no ofrece. Opciones: plugin comunitario o plugin nativo propio pequeño; alternativa de respaldo: carpeta privada de la app + exportación manual. | Plan #4 |
-| **H-02** | Paleta para tema claro | `.docs/03_referencia_ui_android/` solo define la paleta oscura. Hay que diseñar y aprobar una paleta clara equivalente (fondos, superficies, textos, contraste AA) antes de implementar la preferencia de tema. | Plan #6 |
-| **H-03** | Alarma y vibración en segundo plano | Si la app pasa a segundo plano o se bloquea la pantalla durante el descanso, los temporizadores JS pueden pausarse. Evaluar Web Audio + `navigator.vibrate` frente a `@capacitor/haptics` y `@capacitor/local-notifications` (notificación programada al terminar el descanso). | Plan #8 |
+| **H-01** | Carpeta local en Android vs. Web | ✅ **Resuelto en Plan #4** | Plan #4 |
+| **H-02** | Paleta para tema claro | Pendiente (se resuelve en la tarea activa actual) | Plan #6 |
+| **H-03** | Alarma sutil y vibración en descanso | Pendiente | Plan #8 |

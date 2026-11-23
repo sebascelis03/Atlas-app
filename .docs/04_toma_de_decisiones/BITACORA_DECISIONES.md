@@ -67,3 +67,47 @@ Con el repositorio limpio y la definición funcional definitiva en `.docs/`, se 
 * Creación del sistema de diseño completo en `src/styles/atlas.css`.
 * Creación del catálogo de 21 vectores en `src/ui/icons.js`.
 * Creación de la guía visual interactiva de verificación en `src/main.js`.
+
+---
+
+## Iteración #04 — 22 de noviembre de 2026: Capa de Datos, Almacenamiento Local Híbrido (Resolución de H-01) y Servicios de Dominio
+
+### 1. Contexto
+Con la base de Vite, Capacitor y el sistema de diseño en marcha, se ejecutó el **Plan de Implementación #4** para dotar a ATLAS de su capa de datos completa en JavaScript puro.
+
+### 2. Decisiones Tomadas y Resolución de H-01
+* **ADR-011 / Resolución de H-01 (Adaptador de Almacenamiento Híbrido con `@capacitor/filesystem`):**
+  * Se implementó `src/core/storage.js` detectando automáticamente si la app corre en Android nativo (`Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'android'`) o en navegador web.
+  * En **Web (entorno de pruebas)**: `needsFolderSetup()` devuelve `false` de forma automática, desactivando el modal de carpeta y guardando todas las colecciones en `localStorage` bajo el prefijo `atlas_v2_*`.
+  * En **Android (`.apk`)**: `needsFolderSetup()` devuelve `true` hasta que el usuario elija/cree su carpeta local en la ventana emergente de primera ejecución. Cada colección se escribe como un archivo `.json` independiente dentro de `Directory.Documents/<folderName>/` usando `@capacitor/filesystem`, manteniendo una caché en memoria sincronizada para lecturas síncronas instantáneas en la interfaz.
+* **ADR-012 (Aislamiento por Cuenta Activa con `UserScope`):** Todas las colecciones de usuario (`preferences`, `custom_exercises`, `routine_blocks`, `workout_logs`, `daily_water`, `daily_weight`) se indexan con el sufijo `_u_${userId}` mediante `scopedKey()`, garantizando que cambiar de cuenta en el mismo dispositivo nunca mezcle datos.
+* **ADR-013 (Marca "ANTERIOR" Real y Finalización Anticipada en `workoutService`):** `WorkoutService.getPreviousSetInfo(exerciseName, setNumber)` consulta el último entrenamiento real donde se realizó ese ejercicio y devuelve `"{kg} kg × {reps}"`. Además, `saveWorkoutSession()` soporta el flag `endedEarly: true` para guardar todo lo registrado cuando el usuario decide finalizar antes.
+
+### 3. Lo que se Hizo
+* Instalación de `@capacitor/filesystem` (`^6.0.0`).
+* Creación de `src/core/date.js`, `src/core/storage.js` y `src/core/userScope.js`.
+* Creación de `src/services/authService.js`, `src/services/preferencesService.js`, `src/services/exerciseCatalog.js`, `src/services/blockService.js`, `src/services/workoutService.js`, `src/services/dailyLogService.js` y `src/services/index.js`.
+* Actualización de `src/main.js` con diagnóstico interactivo en vivo de todos los servicios.
+
+### 4. Errores o Inconvenientes
+* Ninguno; la compilación de producción (`npm run build`) empaquetó todos los servicios y `@capacitor/filesystem` sin errores.
+
+---
+
+## Iteración #05 — 22 de noviembre de 2026: Sistema de Modales/Toasts, Portada (Login y Registro Ampliado) y Modal de Carpeta Local
+
+### 1. Contexto
+Con la capa de datos y almacenamiento híbrido verificada, se ejecutó el **Plan de Implementación #5** para construir el sistema de modales reutilizables, el diálogo de carpeta local de primera ejecución en Android y la Portada completa de Login y Registro Ampliado.
+
+### 2. Decisiones Tomadas
+* **ADR-014 (Gestor Unificado de Modales `src/ui/modals.js`):** Se centralizaron `showDialog()` (88 % del ancho sobre backdrop oscuro), `showBottomSheet()` (hoja inferior `#161B22` con asa `40×4px`) y `showToast()` en un único módulo reutilizable sin dependencias externas.
+* **ADR-015 (Modal de Carpeta Local `src/screens/FolderSetupModal.js`):** Al iniciar la aplicación se invoca `checkAndShowFolderSetupIfNeeded()`. En navegador web se omite automáticamente (`StorageEngine.needsFolderSetup() === false`), mientras que en Android (`.apk`) se despliega en la primera ejecución. Además, `openFolderSetupModal()` queda expuesto para poder invocarse en cualquier momento desde *Configuración de cuenta*.
+* **ADR-016 (Portada de Autenticación con Registro Ampliado `src/screens/AuthScreen.js`):** Se implementó el flujo completo de Inicio de Sesión y Registro con todos los campos definidos (Nombre obligatorio, Apellido opcional, Correo, Contraseña con botón Ver/Ocultar, Ciudad y País opcionales en grilla de 2 columnas, chips de Género, Año de nacimiento y casilla de aceptación de Términos y Condiciones con modal de lectura local).
+
+### 3. Lo que se Hizo
+* Ampliación de `src/styles/atlas.css` con estilos de modales, animaciones y portada.
+* Creación de `src/ui/modals.js`, `src/screens/FolderSetupModal.js` y `src/screens/AuthScreen.js`.
+* Conexión del ciclo de sesión en `src/main.js` (Portada cuando no hay sesión activa -> Vista autenticada con diálogo de confirmación de cierre de sesión).
+
+### 4. Errores o Inconvenientes
+* Ninguno; `npm run build` compiló todos los módulos de interfaz sin errores.

@@ -1,15 +1,12 @@
 # 🎯 Tarea Activa en Curso
 
-## Plan de Implementación #4: Capa de Datos, Almacenamiento Local Híbrido (Android Carpeta / Web) y Servicios de Dominio
+## Plan de Implementación #6: Estructura de Navegación Principal (Header con Menú de Perfil + Barra de 3 Pestañas) y Resolución de H-02 (Tema Claro)
 
 * **Estado:** Pendiente de aprobación del usuario.
 * **Objetivo:**
-  1. Resolver el hallazgo **H-01** implementando el adaptador de almacenamiento local híbrido (`src/core/storage.js`) que distingue automáticamente entre entorno Android (`.apk`, con solicitud de carpeta local en primera ejecución y lectura/escritura JSON) y navegador web (desactivación automática del modal de carpeta y persistencia directa en `localStorage` / `IndexedDB`).
-  2. Implementar utilidades de fecha (`src/core/date.js`) y aislamiento por cuenta activa (`src/core/userScope.js`).
-  3. Implementar los 6 servicios de dominio limpios desde cero en `src/services/`:
-     * `authService.js` (Login, Registro ampliado con todos los campos nuevos, sesión activa y cuentas demo).
-     * `preferencesService.js` (Tema oscuro/claro, tiempo de descanso por defecto, sonido/vibración, ruta de carpeta local).
-     * `exerciseCatalog.js` (29 ejercicios base en 6 grupos musculares + creación/persistencia de **ejercicios propios** por usuario).
-     * `blockService.js` (CRUD de bloques de entrenamiento con nombre libre, sin días fijos).
-     * `workoutService.js` (Historial de sesiones terminadas o finalizadas antes, cálculo de racha, volumen, récords personales).
-     * `dailyLogService.js` (Registro diario de vasos de agua con reinicio por fecha y registro fechado de peso corporal).
+  1. Resolver el hallazgo **H-02** añadiendo la paleta oficial para el **Tema Claro (`:root[data-theme="light"]`)** en `src/styles/atlas.css`, conservando los acentos de marca (`#FF9100`, `#00E676`, `#00E5FF`) con fondos claros de alto contraste AA/AAA.
+  2. Construir el **Menú Superior de Perfil (`src/screens/ProfileMenuModal.js`)** desplegable desde el botón de perfil en la esquina superior derecha del Header con sus 3 opciones oficiales:
+     * **Configuración de cuenta:** Editar datos del usuario (Nombre, Apellido, Ciudad, País, Género, Año de nacimiento), configurar carpeta local y exportar/importar respaldo JSON.
+     * **Preferencias:** Cambio de tema **Oscuro / Claro** en tiempo real, tiempo de descanso por defecto (`30s`, `60s`, `90s`, `120s`, `180s` o personalizado), activar/desactivar sonido de alarma sutil y vibración, peso meta, meta semanal y meta de agua.
+     * **Cerrar sesión:** Con diálogo de confirmación.
+  3. Construir el **Contenedor Principal de Navegación (`src/screens/AppShell.js`)** con el Header superior fijo, las **3 pestañas inferiores (`Inicio` · `Rutinas` · `Dashboard`)** que preservan su estado y posición de scroll al cambiar entre ellas, y conectar `src/main.js`.

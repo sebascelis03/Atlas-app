@@ -652,3 +652,245 @@ body {
   font-size: 13px;
   font-weight: 600;
 }
+
+/* ==========================================================================
+   Sistema de Modales En Vivo (Dialog 88%, BottomSheet y Toasts)
+   ========================================================================== */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background-color: rgba(0, 0, 0, 0.72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: atlasFadeIn 0.16s ease-out;
+}
+
+.modal-backdrop--sheet {
+  align-items: flex-end;
+  padding: 0;
+}
+
+.dialog-box {
+  width: 88%;
+  max-width: 410px;
+  max-height: 88dvh;
+  overflow-y: auto;
+  background-color: var(--surface-card);
+  border: 1px solid var(--surface-card-stroke);
+  border-radius: var(--radius-tile);
+  padding: 24px;
+  color: var(--text-primary);
+  animation: atlasScaleIn 0.16s ease-out;
+}
+
+.bottom-sheet {
+  width: 100%;
+  max-width: 480px;
+  max-height: 90dvh;
+  overflow-y: auto;
+  background-color: var(--surface-dark);
+  border-top: 1px solid var(--surface-card-stroke);
+  border-radius: 24px 24px 0 0;
+  padding: 12px 24px calc(28px + env(safe-area-inset-bottom, 0px));
+  color: var(--text-primary);
+  animation: atlasSlideUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.toast-container {
+  position: fixed;
+  bottom: calc(82px + env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 90%;
+  max-width: 420px;
+  pointer-events: none;
+}
+
+.toast {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: var(--surface-card);
+  border: 1px solid var(--surface-card-stroke);
+  border-radius: 999px;
+  padding: 11px 18px;
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  animation: atlasSlideUp 0.18s ease-out;
+  text-align: center;
+}
+
+.toast--success {
+  border-color: var(--primary-neon);
+  color: var(--primary-neon);
+}
+
+.toast--error {
+  border-color: var(--accent-red);
+  color: var(--accent-red);
+}
+
+@keyframes atlasFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes atlasScaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes atlasSlideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   Portada: Login y Registro Ampliado (activity_login.xml & activity_register.xml)
+   ========================================================================== */
+.auth-screen {
+  width: 100%;
+  min-height: 100dvh;
+  padding: 56px 28px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--bg-dark);
+}
+
+.auth-screen--register {
+  padding-top: 20px;
+  align-items: stretch;
+}
+
+.auth-logo {
+  width: 72px;
+  height: 72px;
+  color: var(--primary-neon);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-slogan {
+  margin: 2px 0 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--primary-neon);
+  letter-spacing: 0.08em;
+}
+
+.auth-card {
+  width: 100%;
+  margin-top: 36px;
+  background-color: var(--surface-card);
+  border: 1px solid var(--surface-card-stroke);
+  border-radius: var(--radius-card);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-back-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+}
+
+.auth-back-btn:active {
+  background-color: var(--surface-pressed);
+}
+
+.grid-2col {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.field__toggle-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 4px;
+  margin-left: 6px;
+}
+
+.auth-link {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 14px;
+  padding: 8px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.auth-link__neon {
+  color: var(--primary-neon);
+  font-weight: 700;
+}
+
+.auth-link__orange {
+  color: var(--accent-orange);
+  font-weight: 700;
+}
+
+.terms-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 16px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.terms-row__checkbox {
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  accent-color: var(--accent-orange);
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.terms-row__text {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+.terms-row__link {
+  color: var(--accent-orange);
+  font-weight: 700;
+  text-decoration: underline;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+}
