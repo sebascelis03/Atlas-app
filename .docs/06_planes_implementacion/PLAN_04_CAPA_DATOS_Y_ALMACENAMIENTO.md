@@ -2,7 +2,7 @@
 
 * **Fecha:** 22 de noviembre de 2026
 * **Estado:** ✅ Aprobado y Ejecutado
-* **Rama:** `feat/atlas-js-clean`
+* **Rama:** `feat/javascript-apk-port`
 
 ---
 

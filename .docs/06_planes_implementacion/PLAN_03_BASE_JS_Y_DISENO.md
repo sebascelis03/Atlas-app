@@ -2,7 +2,7 @@
 
 * **Fecha:** 22 de noviembre de 2026
 * **Estado:** ✅ Aprobado y Ejecutado
-* **Rama:** `feat/atlas-js-clean`
+* **Rama:** `feat/javascript-apk-port`
 
 ## 1. Objetivo
 Montar el esqueleto del proyecto JS en la raíz (`npm run dev` / `npm run build` funcionales) con el sistema de diseño CSS y el catálogo de íconos de `.docs/03_referencia_ui_android/`. Sin lógica de app, sin pantallas reales y sin plataforma Android todavía.

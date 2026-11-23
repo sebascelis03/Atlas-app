@@ -2,7 +2,7 @@
 
 * **Fecha:** 22 de noviembre de 2026
 * **Estado:** ✅ Aprobado y Ejecutado
-* **Rama de trabajo:** `feat/atlas-js-clean` (con `main` intacta y tag de respaldo `v1.0-kotlin-academico`)
+* **Rama de trabajo:** `feat/javascript-apk-port` (con `main` intacta y tag de respaldo `v1.0-kotlin-academico`)
 
 > **Regla Permanente de Compactación:** cuando el usuario lo indique, los planes antiguos de esta carpeta se compactarán en `HISTORIAL_PLANES_COMPACTADOS.md`.
 

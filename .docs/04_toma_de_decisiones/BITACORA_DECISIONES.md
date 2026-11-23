@@ -35,7 +35,7 @@ Con la estética ya respaldada en `.docs/03_referencia_ui_android/`, el usuario 
 * **ADR-004 (Navegación de 3 pestañas + menú de perfil):** se reemplazan las 5 pestañas originales por un header (logo ATLAS + botón de perfil con menú: Configuración de cuenta, Preferencias, Cerrar sesión) y una barra inferior con **Inicio**, **Rutinas (Bloques)** y **Dashboard**. Las 5 pestañas descritas en `03_referencia_ui_android/` quedan **solo como referencia visual** de componentes (tarjetas, tiles, gráficas, modales), no como estructura de navegación.
 * **ADR-005 (Almacenamiento local híbrido):** en Android (`.apk`) la primera ejecución pide crear/elegir una carpeta local de datos; en navegador la ventana se desactiva automáticamente y se usa `localStorage`/`IndexedDB`. Un adaptador común oculta la diferencia al resto de la app.
 * **ADR-006 (Registro ampliado):** Nombre (obligatorio), Apellido (opcional), Correo y Contraseña (obligatorios), Ciudad y País (opcionales por privacidad), Género (`Hombre` / `Mujer` / `Prefiero no decirlo`), Año de nacimiento y aceptación de Términos y Condiciones.
-* **ADR-007 (Limpieza en rama aparte):** la eliminación del proyecto Android Studio se hace en `feat/atlas-js-clean`. `main` queda intacta con la versión académica y el tag `v1.0-kotlin-academico` como punto de restauración.
+* **ADR-007 (Limpieza en rama aparte):** la eliminación del proyecto Android Studio se hace en `feat/javascript-apk-port` (sincronizada con `origin/feat/javascript-apk-port`). `main` queda intacta con la versión académica y el tag `v1.0-kotlin-academico` como punto de restauración.
 
 ### 3. Hallazgos Técnicos Registrados (pendientes)
 * **H-01 — Carpeta local en Android (SAF):** elegir una carpeta requiere el Storage Access Framework (`ACTION_OPEN_DOCUMENT_TREE`), no disponible en `@capacitor/filesystem`. Se evaluará en el **Plan #4** (plugin comunitario, plugin nativo propio o carpeta privada + exportación).
@@ -111,3 +111,27 @@ Con la capa de datos y almacenamiento híbrido verificada, se ejecutó el **Plan
 
 ### 4. Errores o Inconvenientes
 * Ninguno; `npm run build` compiló todos los módulos de interfaz sin errores.
+
+---
+
+## Iteración #06 — 23 de noviembre de 2026: Estructura de Navegación Principal (Header con Menú de Perfil + 3 Pestañas) y Resolución de H-02 (Tema Claro)
+
+### 1. Contexto
+Con la Portada y el sistema de modales funcionando, se ejecutó el **Plan de Implementación #6** para sincronizar el nombre real de la rama en GitHub (`feat/javascript-apk-port`) en `.docs/`, resolver el hallazgo **H-02** (paleta para tema claro) y construir el contenedor principal (`AppShell`) con su Header, menú desplegable de perfil y 3 pestañas con preservación de scroll.
+
+### 2. Decisiones Tomadas y Resolución de H-02
+* **ADR-017 / Resolución de H-02 (Paleta Oficial para Tema Claro `:root[data-theme="light"]`):** Se definieron en `src/styles/atlas.css` todos los tokens de superficie clara (`#F4F6F9`, `#FFFFFF`, `#EEF1F6`, bordes `#DCE1E8`, textos `#111827` y `#4B5563`) y acentos ajustados para alto contraste WCAG AA sobre fondo blanco (`#F57C00`, `#00C853`, `#00ACC1`), permitiendo conmutar en tiempo real entre tema Oscuro y Claro desde *Preferencias*.
+* **ADR-018 (Menú Superior Desplegable de Perfil `src/screens/ProfileMenuModal.js`):** El avatar en la esquina superior derecha del Header abre un menú contextual con las 3 secciones definidas:
+  1. *Configuración de cuenta* (edición de datos del usuario, cambio de carpeta local y exportación/importación de respaldo `.json`).
+  2. *Preferencias* (tema oscuro/claro, tiempo de descanso por defecto, sonido, vibración y metas personales).
+  3. *Cerrar sesión* (con diálogo de confirmación).
+* **ADR-019 (Preservación de Estado y Scroll en las 3 Pestañas `src/screens/AppShell.js`):** Los tres paneles (`Inicio`, `Rutinas`, `Dashboard`) permanecen montados en el DOM y alternan mediante el atributo `hidden`, guardando y restaurando `window.scrollY` por pestaña.
+
+### 3. Lo que se Hizo
+* Actualización de todas las referencias de rama en `.docs/` a `feat/javascript-apk-port`.
+* Ampliación de `src/styles/atlas.css` con `:root[data-theme="light"]` y estilos del menú de perfil.
+* Creación de `src/screens/ProfileMenuModal.js` y `src/screens/AppShell.js`.
+* Actualización de `src/main.js`.
+
+### 4. Errores o Inconvenientes
+* Ninguno; `npm run build` compiló todos los módulos sin errores.
