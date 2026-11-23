@@ -2,87 +2,89 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Atlas.Card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
-    app:cardBackgroundColor="@color/surface_card"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="0dp"
-    app:strokeColor="@color/surface_card_stroke"
-    app:strokeWidth="1dp">
+    android:clickable="true"
+    android:focusable="true"
+    app:rippleColor="@color/accent_orange_glow">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="16dp">
+        android:orientation="horizontal">
+
+        <!-- Barra de color según el grupo muscular principal -->
+        <View
+            android:id="@+id/viewAccent"
+            android:layout_width="5dp"
+            android:layout_height="match_parent"
+            android:background="@color/accent_orange" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="16dp">
 
-            <TextView
-                android:id="@+id/tvRoutineTitle"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_primary"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                tools:text="Día 1: Empuje (Push)" />
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tvMuscleGroups"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:textColor="@color/text_secondary"
-                android:textSize="13sp"
-                tools:text="Pecho, Hombro y Tríceps" />
+                <TextView
+                    android:id="@+id/tvRoutineTitle"
+                    style="@style/Atlas.Text.Section"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Día 1: Empuje (Push)" />
 
-            <!-- Primeros ejercicios del bloque; oculto si la rutina está vacía -->
-            <TextView
-                android:id="@+id/tvRoutineExercises"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:ellipsize="end"
-                android:maxLines="2"
-                android:textColor="@color/text_muted"
-                android:textSize="12sp"
-                tools:text="Press de Banca Plano • Press Inclinado con Mancuernas • Press Militar con Barra…" />
+                <TextView
+                    android:id="@+id/tvMuscleGroups"
+                    style="@style/Atlas.Text.Body"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    tools:text="Pecho, Hombro y Tríceps" />
 
-            <TextView
-                android:id="@+id/tvRoutineMetrics"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/bg_input_field"
-                android:paddingHorizontal="10dp"
-                android:paddingVertical="5dp"
-                android:textColor="@color/text_muted"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                tools:text="5 ejercicios • 50 min" />
+                <!-- Primeros ejercicios del bloque; oculto si la rutina está vacía -->
+                <TextView
+                    android:id="@+id/tvRoutineExercises"
+                    style="@style/Atlas.Text.Caption"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    tools:text="Press de Banca Plano • Press Inclinado con Mancuernas • Press Militar con Barra…" />
+
+                <TextView
+                    android:id="@+id/tvRoutineMetrics"
+                    style="@style/Atlas.Text.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_pill"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="5dp"
+                    android:textStyle="bold"
+                    tools:text="5 ejercicios • 50 min" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/btnStartRoutine"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="12dp"
+                android:background="@drawable/bg_play_button"
+                android:contentDescription="@string/routines_start_desc"
+                android:padding="14dp"
+                android:src="@drawable/ic_play"
+                app:tint="@color/bg_dark" />
         </LinearLayout>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnStartRoutine"
-            android:layout_width="wrap_content"
-            android:layout_height="42dp"
-            android:layout_marginStart="12dp"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:minWidth="0dp"
-            android:paddingHorizontal="18dp"
-            android:text="@string/routines_start"
-            android:textColor="@color/bg_dark"
-            android:textSize="13sp"
-            android:textStyle="bold"
-            app:backgroundTint="@color/accent_orange"
-            app:cornerRadius="12dp" />
-
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

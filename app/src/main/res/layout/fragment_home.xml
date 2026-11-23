@@ -14,7 +14,7 @@
         android:orientation="vertical"
         android:paddingHorizontal="20dp"
         android:paddingTop="24dp"
-        android:paddingBottom="24dp">
+        android:paddingBottom="28dp">
 
         <!-- Encabezado: fecha, saludo y avatar -->
         <LinearLayout
@@ -31,189 +31,345 @@
 
                 <TextView
                     android:id="@+id/tvDate"
+                    style="@style/Atlas.Text.Body"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="13sp"
-                    tools:text="Lunes, 19 de octubre" />
+                    tools:text="Lunes, 26 de octubre" />
 
                 <TextView
                     android:id="@+id/tvGreeting"
+                    style="@style/Atlas.Text.Screen"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:textColor="@color/text_primary"
-                    android:textSize="22sp"
-                    android:textStyle="bold"
                     tools:text="Hola, Andrés" />
             </LinearLayout>
 
             <TextView
                 android:id="@+id/tvAvatarInitial"
-                android:layout_width="46dp"
-                android:layout_height="46dp"
-                android:background="@drawable/bg_avatar_circle"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_avatar_circle_orange"
                 android:contentDescription="@string/home_avatar_desc"
                 android:gravity="center"
-                android:textColor="@color/text_primary"
-                android:textSize="18sp"
+                android:textColor="@color/accent_orange"
+                android:textSize="19sp"
                 android:textStyle="bold"
                 tools:text="A" />
         </LinearLayout>
 
-        <!-- Tarjeta: Meta semanal -->
+        <!-- Meta semanal + tira de la semana -->
         <com.google.android.material.card.MaterialCardView
+            style="@style/Atlas.Card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            app:cardBackgroundColor="@color/surface_card"
-            app:cardCornerRadius="18dp"
-            app:cardElevation="0dp"
-            app:strokeColor="@color/surface_card_stroke"
-            app:strokeWidth="1dp">
+            android:layout_marginTop="22dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:padding="18dp">
 
-                <!-- Anillo de progreso con porcentaje al centro -->
-                <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
-                    <com.google.android.material.progressindicator.CircularProgressIndicator
-                        android:id="@+id/progressWeeklyGoal"
+                    <FrameLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:indeterminate="false"
-                        android:max="100"
-                        app:indicatorColor="@color/accent_orange"
-                        app:indicatorSize="72dp"
-                        app:trackColor="@color/surface_input"
-                        app:trackCornerRadius="4dp"
-                        app:trackThickness="7dp"
-                        tools:progress="68" />
+                        android:layout_height="wrap_content">
 
-                    <TextView
-                        android:id="@+id/tvWeeklyGoalPercent"
-                        android:layout_width="wrap_content"
+                        <com.google.android.material.progressindicator.CircularProgressIndicator
+                            android:id="@+id/progressWeeklyGoal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:indeterminate="false"
+                            android:max="100"
+                            app:indicatorColor="@color/accent_orange"
+                            app:indicatorSize="76dp"
+                            app:trackColor="@color/surface_input"
+                            app:trackCornerRadius="4dp"
+                            app:trackThickness="8dp"
+                            tools:progress="68" />
+
+                        <TextView
+                            android:id="@+id/tvWeeklyGoalPercent"
+                            style="@style/Atlas.Text.Value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:textSize="17sp"
+                            tools:text="68%" />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:textColor="@color/text_primary"
-                        android:textSize="17sp"
-                        android:textStyle="bold"
-                        tools:text="68%" />
-                </FrameLayout>
+                        android:layout_marginStart="18dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/Atlas.Text.Section"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/home_weekly_goal_title" />
+
+                        <TextView
+                            android:id="@+id/tvWeeklyGoalDetail"
+                            style="@style/Atlas.Text.Body"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            tools:text="3 de 4 entrenamientos" />
+
+                        <TextView
+                            android:id="@+id/tvWeeklyGoalHint"
+                            style="@style/Atlas.Text.Caption"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            tools:text="Te falta 1 para tu meta" />
+                    </LinearLayout>
+                </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:id="@+id/layoutWeekStrip"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="18dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/home_weekly_goal_title"
-                        android:textColor="@color/text_primary"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvWeeklyGoalDetail"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="13sp"
-                        tools:text="4 de 6 entrenamientos" />
-
-                    <TextView
-                        android:id="@+id/tvStreak"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/bg_input_field"
-                        android:paddingHorizontal="10dp"
-                        android:paddingVertical="5dp"
-                        android:textColor="@color/accent_orange"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        tools:text="🔥 Racha de 6 días" />
-                </LinearLayout>
+                    android:layout_marginTop="18dp"
+                    android:orientation="horizontal" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Sección: Rutina de hoy -->
+        <!-- Mini estadísticas -->
+        <LinearLayout
+            android:id="@+id/layoutQuickStats"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="-4dp"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal" />
+
+        <!-- Sección: rutina sugerida -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="22dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <TextView
+                style="@style/Atlas.Text.Section"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/home_today_routine"
-                android:textColor="@color/text_primary"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:text="@string/home_today_label" />
 
             <TextView
                 android:id="@+id/tvSeeAll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
-                android:padding="4dp"
+                android:gravity="center"
+                android:minHeight="48dp"
+                android:paddingHorizontal="8dp"
                 android:text="@string/home_see_all"
                 android:textColor="@color/accent_orange"
-                android:textSize="13sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- Ejercicios del día (datos mock del mockup; el Prompt 4 los traerá de RoutineRepository) -->
         <com.google.android.material.card.MaterialCardView
+            style="@style/Atlas.Card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            app:cardBackgroundColor="@color/surface_card"
-            app:cardCornerRadius="18dp"
-            app:cardElevation="0dp"
-            app:strokeColor="@color/surface_card_stroke"
-            app:strokeWidth="1dp">
+            android:layout_marginTop="2dp">
 
             <LinearLayout
-                android:id="@+id/layoutTodayExercises"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingVertical="6dp" />
+                android:paddingBottom="18dp"
+                android:paddingTop="18dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="18dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvTodayTitle"
+                            style="@style/Atlas.Text.Section"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="Día 1: Empuje (Push)" />
+
+                        <TextView
+                            android:id="@+id/tvTodayMuscles"
+                            style="@style/Atlas.Text.Body"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            tools:text="Pecho, Hombro y Tríceps" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvTodayDone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:background="@drawable/bg_chip_orange"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="4dp"
+                        android:text="@string/home_done_today"
+                        android:textColor="@color/accent_orange"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvTodayMeta"
+                    style="@style/Atlas.Text.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="18dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_pill"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="5dp"
+                    android:textStyle="bold"
+                    tools:text="5 ejercicios • 50 min" />
+
+                <LinearLayout
+                    android:id="@+id/layoutTodayExercises"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:orientation="vertical" />
+
+                <TextView
+                    android:id="@+id/tvTodayEmpty"
+                    style="@style/Atlas.Text.Body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:paddingHorizontal="18dp"
+                    android:text="@string/home_no_routines"
+                    android:visibility="gone" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnStartWorkout"
+                    style="@style/Atlas.Button.Primary"
+                    android:layout_width="match_parent"
+                    android:layout_height="54dp"
+                    android:layout_marginHorizontal="18dp"
+                    android:layout_marginTop="14dp"
+                    android:text="@string/home_start_workout"
+                    app:icon="@drawable/ic_play"
+                    app:iconGravity="textStart"
+                    app:iconSize="18dp"
+                    app:iconTint="@color/bg_dark" />
+            </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Acción principal -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnStartWorkout"
+        <!-- Hidratación -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Atlas.Card"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginTop="22dp"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:text="@string/home_start_workout"
-            android:textColor="@color/bg_dark"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:backgroundTint="@color/accent_orange"
-            app:cornerRadius="14dp"
-            app:icon="@drawable/ic_fitness_center"
-            app:iconGravity="textStart"
-            app:iconTint="@color/bg_dark" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="18dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:background="@drawable/bg_icon_tile"
+                        android:contentDescription="@null"
+                        android:padding="11dp"
+                        android:src="@drawable/ic_drop"
+                        app:tint="@color/accent_cyan" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="14dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/Atlas.Text.CardTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/home_water_title" />
+
+                        <TextView
+                            android:id="@+id/tvWaterCount"
+                            style="@style/Atlas.Text.Body"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="1dp"
+                            tools:text="3 / 8 vasos" />
+                    </LinearLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnMinusWater"
+                        style="@style/Atlas.Button.Round"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:contentDescription="@string/home_water_minus_desc"
+                        android:text="@string/progress_water_minus"
+                        android:textColor="@color/accent_cyan" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnPlusWater"
+                        style="@style/Atlas.Button.Round"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="8dp"
+                        android:contentDescription="@string/home_water_plus_desc"
+                        android:text="@string/progress_water_plus"
+                        android:textColor="@color/accent_cyan" />
+                </LinearLayout>
+
+                <com.google.android.material.progressindicator.LinearProgressIndicator
+                    android:id="@+id/progressWater"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:indeterminate="false"
+                    android:max="100"
+                    app:indicatorColor="@color/accent_cyan"
+                    app:trackColor="@color/surface_input"
+                    app:trackCornerRadius="4dp"
+                    app:trackThickness="8dp"
+                    tools:progress="40" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
     </LinearLayout>
 </ScrollView>

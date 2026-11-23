@@ -1,6 +1,7 @@
 package com.proyecto.atlas
 
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -22,13 +23,17 @@ import com.google.android.material.chip.Chip
 import com.proyecto.atlas.adapter.ExercisePickerAdapter
 import com.proyecto.atlas.adapter.WorkoutExerciseAdapter
 import com.proyecto.atlas.data.ExerciseRepository
-import com.proyecto.atlas.data.MetricsRepository
+import com.proyecto.atlas.data.WorkoutLogRepository
 import com.proyecto.atlas.data.RoutineRepository
 import com.proyecto.atlas.databinding.ActivityMainBinding
 import com.proyecto.atlas.databinding.BottomSheetExercisePickerBinding
 import com.proyecto.atlas.databinding.DialogWorkoutSummaryBinding
 import com.proyecto.atlas.model.ActiveWorkout
 import com.proyecto.atlas.model.Exercise
+import com.proyecto.atlas.model.Lift
+import com.proyecto.atlas.model.Routine
+import com.proyecto.atlas.model.WorkoutLog
+import com.proyecto.atlas.util.DateUtils
 import com.proyecto.atlas.model.WorkoutExercise
 import com.proyecto.atlas.model.WorkoutSet
 import java.util.Locale
@@ -303,10 +308,15 @@ class MainActivity : AppCompatActivity() {
         dialog.window?.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 
-    /** Acredita el entrenamiento en las estadísticas y regresa a la pestaña Inicio. */
+    /** Guarda la sesión en el historial y regresa a la pestaña Inicio. */
     private fun finishWorkout() {
-        MetricsRepository.incrementWorkouts()
-        Toast.makeText(this, "¡Entrenamiento guardado con éxito!", Toast.LENGTH_SHORT).show()
+        val saved = saveWorkoutLog()
+        Toast.makeText(
+            this,
+            if (saved) "¡Entrenamiento guardado con éxito!"
+            else "Sesión sin series completadas: no se guardó",
+            Toast.LENGTH_SHORT
+        ).show()
 
         val intent = Intent(this, HomeContainerActivity::class.java)
         intent.putExtra(HomeContainerActivity.EXTRA_SHOW_HOME, true)
@@ -315,12 +325,63 @@ class MainActivity : AppCompatActivity() {
         finish()
     }
 
+    /**
+     * Registra la sesión (fecha, duración, volumen, series y mejor peso por ejercicio).
+     * Devuelve false si no se completó ninguna serie.
+     */
+    private fun saveWorkoutLog(): Boolean {
+        var volume = 0.0
+        var sets = 0
+        var exercisesDone = 0
+        val lifts = mutableListOf<Lift>()
+
+        activeWorkout.workoutExercises.forEach { workoutExercise ->
+            var best = 0.0
+            var anyDone = false
+            workoutExercise.sets.filter { it.isCompleted }.forEach { set ->
+                anyDone = true
+                sets++
+                volume += set.weightKg * set.reps
+                if (set.weightKg > best) best = set.weightKg
+            }
+            if (anyDone) exercisesDone++
+            if (anyDone && best > 0.0) lifts.add(Lift(workoutExercise.exercise.name, best))
+        }
+
+        if (sets == 0) return false
+
+        val elapsedSec = ((SystemClock.elapsedRealtime() - binding.chronoWorkoutTime.base) / 1000).toInt()
+        WorkoutLogRepository.add(
+            WorkoutLog(
+                dateKey = DateUtils.today(),
+                timestamp = System.currentTimeMillis(),
+                title = activeWorkout.title,
+                durationSec = elapsedSec,
+                volumeKg = volume,
+                sets = sets,
+                exercises = exercisesDone,
+                lifts = lifts
+            )
+        )
+        return true
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         restCountDownTimer?.cancel()
     }
 
     companion object {
+        /** Intent para entrenar una rutina; sin rutina, abre una sesión libre. */
+        fun intentFor(context: Context, routine: Routine?): Intent =
+            Intent(context, MainActivity::class.java).apply {
+                if (routine != null) {
+                    putExtra(EXTRA_ROUTINE_ID, routine.id)
+                    putExtra(EXTRA_ROUTINE_TITLE, routine.title)
+                    putStringArrayListExtra(EXTRA_EXERCISES, ArrayList(routine.exerciseNames))
+                }
+            }
+
         /** Datos de la rutina a entrenar. Todos opcionales: sin ellos la sesión es libre. */
         const val EXTRA_ROUTINE_ID = "EXTRA_ROUTINE_ID"
         const val EXTRA_ROUTINE_TITLE = "EXTRA_ROUTINE_TITLE"

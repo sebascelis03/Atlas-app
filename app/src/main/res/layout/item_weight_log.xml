@@ -5,18 +5,32 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingVertical="11dp">
+    android:paddingVertical="10dp">
 
-    <TextView
-        android:id="@+id/tvLogDate"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textColor="@color/text_secondary"
-        android:textSize="14sp"
-        tools:text="Hoy" />
+        android:orientation="vertical">
 
-    <!-- Diferencia respecto al registro anterior; oculta en el más antiguo -->
+        <TextView
+            android:id="@+id/tvLogDate"
+            style="@style/Atlas.Text.CardTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            tools:text="26 oct" />
+
+        <TextView
+            android:id="@+id/tvLogInfo"
+            style="@style/Atlas.Text.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            tools:text="3 medidas" />
+    </LinearLayout>
+
+    <!-- Diferencia respecto al registro anterior -->
     <TextView
         android:id="@+id/tvLogDelta"
         android:layout_width="wrap_content"
@@ -34,11 +48,9 @@
 
     <TextView
         android:id="@+id/tvLogWeight"
+        style="@style/Atlas.Text.CardTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/text_primary"
-        android:textSize="15sp"
-        android:textStyle="bold"
         tools:text="74.8 kg" />
 
 </LinearLayout>

@@ -74,6 +74,25 @@
         app:singleLine="false"
         app:singleSelection="true" />
 
+    <!-- Meta semanal -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:text="@string/goals_weekly_label"
+        android:textColor="@color/text_primary"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chipGroupWeekly"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:selectionRequired="true"
+        app:singleLine="false"
+        app:singleSelection="true" />
+
     <TextView
         android:id="@+id/tvGoalsError"
         android:layout_width="match_parent"

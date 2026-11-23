@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.chip.Chip
@@ -20,6 +21,8 @@ import com.proyecto.atlas.data.MetricsRepository
 import com.proyecto.atlas.databinding.BottomSheetEditGoalsBinding
 import com.proyecto.atlas.databinding.DialogConfirmLogoutBinding
 import com.proyecto.atlas.databinding.FragmentProfileBinding
+import com.proyecto.atlas.databinding.ItemSettingRowBinding
+import com.proyecto.atlas.databinding.ItemStatTileBinding
 import java.util.Locale
 
 /** Pestaña "Perfil": datos del usuario activo, estadísticas, metas y cierre de sesión. */
@@ -40,8 +43,6 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.cardStatTarget.setOnClickListener { showEditGoalsSheet() }
-        binding.rowProfileGoal.setOnClickListener { showEditGoalsSheet() }
         binding.btnLogout.setOnClickListener { showLogoutConfirmation() }
     }
 
@@ -49,6 +50,11 @@ class ProfileFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         bindUser()
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden && _binding != null) bindUser()
     }
 
     private fun bindUser() {
@@ -61,29 +67,125 @@ class ProfileFragment : Fragment() {
         binding.tvProfileAvatar.text = name.first().uppercase(locale)
         binding.tvProfileEmail.text = user?.email.orEmpty()
 
-        // El peso vive en MetricsRepository (se actualiza desde Progreso);
-        // la meta y el objetivo son parte del perfil creado al registrarse.
-        val currentWeight = MetricsRepository.getPesoBase()
-        binding.tvStatWeight.text = if (currentWeight > 0.0) {
-            getString(R.string.profile_stat_weight_value, formatWeight(currentWeight))
-        } else {
-            getString(R.string.progress_weight_unset)
-        }
+        bindLevel()
+        bindStats(user?.targetWeight ?: 0.0)
+        bindPlan(user?.goal?.takeIf { it.isNotBlank() } ?: DEFAULT_GOAL, user?.targetWeight ?: 0.0)
+        bindAccount(user?.email.orEmpty())
+    }
 
-        val target = user?.targetWeight ?: 0.0
-        binding.tvStatTarget.text = if (target > 0.0) {
-            getString(R.string.profile_stat_weight_value, formatWeight(target))
+    /** Nivel calculado con los entrenamientos totales y progreso hacia el siguiente. */
+    private fun bindLevel() {
+        val level = MetricsRepository.level()
+        binding.tvProfileLevel.text = level.name
+
+        val needed = level.workoutsForNext
+        if (needed == null) {
+            binding.progressLevel.progress = 100
+            binding.tvLevelDetail.setText(R.string.profile_level_max)
         } else {
-            getString(R.string.progress_weight_unset)
+            binding.progressLevel.progress = (level.workoutsInLevel * 100 / needed).coerceIn(0, 100)
+            binding.tvLevelDetail.text = getString(
+                R.string.profile_level_detail,
+                level.workoutsInLevel,
+                needed,
+                level.nextName
+            )
         }
-        binding.tvStatStreak.text =
-            getString(R.string.profile_stat_streak_value, MetricsRepository.rachaDias)
-        binding.tvTotalWorkouts.text = getString(
-            R.string.profile_total_workouts,
-            MetricsRepository.totalEntrenamientos
+    }
+
+    /** Peso, meta (editable) y racha. */
+    private fun bindStats(target: Double) {
+        val container = binding.layoutProfileStats
+        container.removeAllViews()
+
+        val weight = MetricsRepository.getPesoBase()
+        addStatTile(
+            container, R.drawable.ic_ruler, R.color.accent_cyan,
+            if (weight > 0.0) getString(R.string.profile_stat_weight_value, formatWeight(weight))
+            else getString(R.string.progress_weight_unset),
+            getString(R.string.profile_stat_weight)
         )
+        addStatTile(
+            container, R.drawable.ic_trophy, R.color.primary_neon,
+            if (target > 0.0) getString(R.string.profile_stat_weight_value, formatWeight(target))
+            else getString(R.string.progress_weight_unset),
+            getString(R.string.profile_stat_target)
+        ).setOnClickListener { showEditGoalsSheet() }
+        addStatTile(
+            container, R.drawable.ic_flame, R.color.accent_orange,
+            resources.getQuantityString(
+                R.plurals.home_days,
+                MetricsRepository.rachaDias,
+                MetricsRepository.rachaDias
+            ),
+            getString(R.string.profile_stat_streak)
+        )
+    }
 
-        binding.tvProfileGoal.text = user?.goal?.takeIf { it.isNotBlank() } ?: DEFAULT_GOAL
+    private fun addStatTile(container: ViewGroup, icon: Int, tint: Int, value: String, label: String): View {
+        val tile = ItemStatTileBinding.inflate(layoutInflater, container, false)
+        tile.ivTileIcon.setImageResource(icon)
+        tile.ivTileIcon.setColorFilter(ContextCompat.getColor(requireContext(), tint))
+        tile.tvTileValue.text = value
+        tile.tvTileLabel.text = label
+        container.addView(tile.root)
+        return tile.root
+    }
+
+    /** Objetivo, peso meta y meta semanal: tocar cualquiera abre el editor de metas. */
+    private fun bindPlan(goal: String, target: Double) {
+        val container = binding.layoutPlanRows
+        container.removeAllViews()
+
+        val rows = listOf(
+            getString(R.string.profile_goal_label) to goal,
+            getString(R.string.profile_stat_target) to
+                if (target > 0.0) getString(R.string.profile_stat_weight_value, formatWeight(target))
+                else getString(R.string.progress_weight_unset),
+            getString(R.string.profile_weekly_label) to resources.getQuantityString(
+                R.plurals.profile_per_week,
+                MetricsRepository.metaSemanal,
+                MetricsRepository.metaSemanal
+            )
+        )
+        rows.forEachIndexed { index, (title, value) ->
+            addSettingRow(container, title, value, editable = true, isLast = index == rows.lastIndex)
+        }
+    }
+
+    private fun bindAccount(email: String) {
+        val container = binding.layoutAccountRows
+        container.removeAllViews()
+
+        addSettingRow(container, getString(R.string.profile_email_label), email.ifBlank { "—" }, editable = false, isLast = false)
+        addSettingRow(
+            container,
+            getString(R.string.profile_total_label),
+            MetricsRepository.totalEntrenamientos.toString(),
+            editable = false,
+            isLast = true
+        )
+    }
+
+    private fun addSettingRow(
+        container: ViewGroup,
+        title: String,
+        value: String,
+        editable: Boolean,
+        isLast: Boolean
+    ) {
+        val row = ItemSettingRowBinding.inflate(layoutInflater, container, false)
+        row.tvSettingTitle.text = title
+        row.tvSettingValue.text = value
+        row.ivSettingChevron.visibility = if (editable) View.VISIBLE else View.GONE
+        row.viewDivider.visibility = if (isLast) View.GONE else View.VISIBLE
+        if (editable) {
+            row.rowSetting.setOnClickListener { showEditGoalsSheet() }
+        } else {
+            row.rowSetting.isClickable = false
+            row.rowSetting.background = null
+        }
+        container.addView(row.root)
     }
 
     /** BottomSheet para ajustar el peso meta y el objetivo fitness. */
@@ -119,6 +221,20 @@ class ProfileFragment : Fragment() {
             sheetBinding.chipGroupGoals.addView(chip)
         }
 
+        // Meta semanal: de 1 a 7 entrenamientos.
+        var selectedWeekly = MetricsRepository.metaSemanal
+        (1..7).forEach { days ->
+            val chip = layoutInflater.inflate(
+                R.layout.item_goal_chip,
+                sheetBinding.chipGroupWeekly,
+                false
+            ) as Chip
+            chip.text = days.toString()
+            chip.isChecked = days == selectedWeekly
+            chip.setOnCheckedChangeListener { _, checked -> if (checked) selectedWeekly = days }
+            sheetBinding.chipGroupWeekly.addView(chip)
+        }
+
         sheetBinding.btnSaveGoals.setOnClickListener {
             val rawTarget = sheetBinding.etTargetWeight.text?.toString()?.trim().orEmpty()
 
@@ -142,6 +258,7 @@ class ProfileFragment : Fragment() {
             }
 
             AuthRepository.updateGoals(target, goal)
+            MetricsRepository.metaSemanal = selectedWeekly
             bindUser()
             sheet.dismiss()
             Toast.makeText(requireContext(), R.string.goals_saved, Toast.LENGTH_SHORT).show()

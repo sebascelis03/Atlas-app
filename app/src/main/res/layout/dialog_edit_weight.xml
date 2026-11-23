@@ -8,12 +8,18 @@
     android:padding="24dp">
 
     <TextView
+        android:id="@+id/tvNumberTitle"
+        style="@style/Atlas.Text.Section"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/progress_edit_weight_title"
-        android:textColor="@color/text_primary"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tvNumberSubtitle"
+        style="@style/Atlas.Text.Body"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilExactWeight"
@@ -21,8 +27,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="18dp"
-        android:hint="@string/progress_edit_weight_hint"
-        app:suffixText="kg"
         app:suffixTextColor="@color/text_secondary">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -40,35 +44,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:gravity="end"
         android:orientation="horizontal">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnCancelExactWeight"
-            style="@style/Widget.Material3.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="46dp"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
+            style="@style/Atlas.Button.Outlined"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
             android:text="@string/routines_dialog_cancel"
-            android:textColor="@color/text_secondary"
-            android:textSize="14sp"
-            app:cornerRadius="12dp" />
+            android:textColor="@color/text_secondary" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnApplyExactWeight"
-            android:layout_width="wrap_content"
-            android:layout_height="46dp"
-            android:layout_marginStart="8dp"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:paddingHorizontal="22dp"
-            android:text="@string/progress_edit_weight_save"
-            android:textColor="@color/bg_dark"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:backgroundTint="@color/accent_orange"
-            app:cornerRadius="12dp" />
+            style="@style/Atlas.Button.Primary"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:text="@string/progress_edit_weight_save" />
     </LinearLayout>
 
 </LinearLayout>

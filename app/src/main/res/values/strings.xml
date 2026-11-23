@@ -50,6 +50,7 @@
     <string name="nav_home">Inicio</string>
     <string name="nav_routines">Rutinas</string>
     <string name="nav_progress">Progreso</string>
+    <string name="nav_measures">Medidas</string>
     <string name="nav_profile">Perfil</string>
 
     <!-- Inicio (Dashboard) -->
@@ -59,17 +60,14 @@
     <string name="home_weekly_goal_title">Meta semanal</string>
     <string name="home_weekly_goal_percent">%1$d%%</string>
     <string name="home_weekly_goal_detail">%1$d de %2$d entrenamientos</string>
-    <string name="home_streak">🔥 Racha de %1$d días</string>
-    <string name="home_today_routine">Rutina de hoy • Empuje</string>
     <string name="home_see_all">Ver todo</string>
     <string name="home_start_workout">Comenzar entrenamiento</string>
     <string name="home_sets_reps">%1$d series × %2$d reps</string>
     <string name="home_exercise_done_desc">Ejercicio completado</string>
 
     <!-- Rutinas -->
-    <string name="routines_title">Mis Rutinas</string>
+    <string name="routines_title">Rutinas</string>
     <string name="routines_create">Nueva Rutina</string>
-    <string name="routines_start">Iniciar ▶</string>
     <string name="routines_metrics">%1$d ejercicios • %2$d min</string>
     <string name="routines_dialog_title">Nueva rutina</string>
     <string name="routines_dialog_name_hint">Nombre del bloque</string>
@@ -81,28 +79,13 @@
     <string name="routines_error_empty_name">Escribe el nombre del bloque</string>
     <string name="routines_error_empty_muscles">Indica los músculos principales</string>
     <string name="routines_created">Rutina «%1$s» creada</string>
-    <string name="routines_starting">Iniciando %1$s</string>
 
     <!-- Progreso / Registro diario -->
-    <string name="progress_title">Progreso Diario</string>
-    <string name="progress_weight_card_title">Registro de Peso</string>
-    <string name="progress_weight_card_subtitle">Peso corporal actual</string>
+    <string name="progress_title">Progreso</string>
     <string name="progress_weight_value">%1$s kg</string>
-    <string name="progress_weight_minus">− 0.5</string>
-    <string name="progress_weight_plus">+ 0.5</string>
-    <string name="progress_save_weight">Guardar peso de hoy</string>
-    <string name="progress_weight_saved">Peso guardado: %1$s kg</string>
-    <string name="progress_water_card_title">Consumo de Agua 💧</string>
-    <string name="progress_water_card_subtitle">Mantente hidratado durante el día</string>
-    <plurals name="progress_water_glasses">
-        <item quantity="one">%1$d vaso</item>
-        <item quantity="other">%1$d vasos</item>
-    </plurals>
-    <string name="progress_history_empty">Aún no hay registros de peso. Guarda tu primer peso arriba.</string>
     <string name="progress_weight_unset">Sin registro</string>
     <string name="progress_water_minus">−</string>
     <string name="progress_water_plus">+</string>
-    <string name="progress_history_card_title">Historial Reciente</string>
 
     <!-- Perfil -->
     <string name="profile_avatar_desc">Avatar del usuario</string>
@@ -110,15 +93,11 @@
     <string name="profile_stat_target">Meta</string>
     <string name="profile_stat_streak">Racha</string>
     <string name="profile_stat_weight_value">%1$s kg</string>
-    <string name="profile_stat_streak_value">%1$d días 🔥</string>
     <string name="profile_account_title">Información de la cuenta</string>
     <string name="profile_goal_label">Objetivo</string>
     <string name="profile_level_label">Nivel</string>
-    <string name="profile_level_value">Intermedio</string>
     <string name="profile_logout">Cerrar sesión</string>
     <string name="profile_logout_done">Sesión cerrada</string>
-    <string name="profile_total_workouts">Total entrenamientos completados: %1$d</string>
-    <string name="profile_edit_hint">Toca para editar</string>
 
     <!-- Editar metas (BottomSheet) -->
     <string name="goals_sheet_title">Editar mis metas</string>
@@ -143,7 +122,6 @@
     <string name="progress_goal_reached">¡Alcanzaste tu peso meta! 🎯</string>
     <string name="progress_no_goal">Define tu peso meta en el Perfil</string>
     <string name="progress_edit_weight_title">Peso de hoy</string>
-    <string name="progress_edit_weight_hint">Peso (kg)</string>
     <string name="progress_edit_weight_save">Aplicar</string>
     <string name="progress_delta">%1$s kg</string>
 </resources>

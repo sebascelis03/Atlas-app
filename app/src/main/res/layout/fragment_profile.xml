@@ -13,14 +13,14 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingHorizontal="20dp"
-        android:paddingTop="32dp"
-        android:paddingBottom="24dp">
+        android:paddingTop="28dp"
+        android:paddingBottom="28dp">
 
-        <!-- Avatar e identidad -->
+        <!-- Identidad -->
         <TextView
             android:id="@+id/tvProfileAvatar"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
+            android:layout_width="92dp"
+            android:layout_height="92dp"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/bg_avatar_circle_orange"
             android:contentDescription="@string/profile_avatar_desc"
@@ -32,187 +32,29 @@
 
         <TextView
             android:id="@+id/tvProfileName"
+            style="@style/Atlas.Text.Screen"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:gravity="center"
-            android:textColor="@color/text_primary"
-            android:textSize="22sp"
-            android:textStyle="bold"
+            android:textSize="24sp"
             tools:text="Andrés Pérez" />
 
         <TextView
             android:id="@+id/tvProfileEmail"
+            style="@style/Atlas.Text.Body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:gravity="center"
-            android:textColor="@color/text_secondary"
-            android:textSize="14sp"
             tools:text="admin@atlas.com" />
 
-        <!-- Estadísticas -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="26dp"
-            android:orientation="horizontal">
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:cardBackgroundColor="@color/surface_card"
-                app:cardCornerRadius="14dp"
-                app:cardElevation="0dp"
-                app:strokeColor="@color/surface_card_stroke"
-                app:strokeWidth="1dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingHorizontal="6dp"
-                    android:paddingVertical="14dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/profile_stat_weight"
-                        android:textColor="@color/text_muted"
-                        android:textSize="11sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvStatWeight"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:textColor="@color/text_primary"
-                        android:textSize="15sp"
-                        android:textStyle="bold"
-                        tools:text="74.8 kg" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- La meta es editable: abre el BottomSheet de metas -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardStatTarget"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_weight="1"
-                android:clickable="true"
-                android:focusable="true"
-                app:cardBackgroundColor="@color/surface_card"
-                app:cardCornerRadius="14dp"
-                app:cardElevation="0dp"
-                app:rippleColor="@color/accent_orange_glow"
-                app:strokeColor="@color/accent_orange"
-                app:strokeWidth="1dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingHorizontal="6dp"
-                    android:paddingVertical="14dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/profile_stat_target"
-                        android:textColor="@color/text_muted"
-                        android:textSize="11sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvStatTarget"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:textColor="@color/text_primary"
-                        android:textSize="15sp"
-                        android:textStyle="bold"
-                        tools:text="80.0 kg" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_weight="1"
-                app:cardBackgroundColor="@color/surface_card"
-                app:cardCornerRadius="14dp"
-                app:cardElevation="0dp"
-                app:strokeColor="@color/surface_card_stroke"
-                app:strokeWidth="1dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingHorizontal="6dp"
-                    android:paddingVertical="14dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/profile_stat_streak"
-                        android:textColor="@color/text_muted"
-                        android:textSize="11sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvStatStreak"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:textColor="@color/accent_orange"
-                        android:textSize="15sp"
-                        android:textStyle="bold"
-                        tools:text="6 días 🔥" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-        </LinearLayout>
-
-        <!-- Total de entrenamientos completados -->
-        <TextView
-            android:id="@+id/tvTotalWorkouts"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/bg_input_field"
-            android:gravity="center"
-            android:paddingVertical="11dp"
-            android:textColor="@color/text_secondary"
-            android:textSize="13sp"
-            android:textStyle="bold"
-            tools:text="Total entrenamientos completados: 14" />
-
-        <!-- Información de la cuenta -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
-            android:text="@string/profile_account_title"
-            android:textColor="@color/text_primary"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
+        <!-- Nivel del atleta -->
         <com.google.android.material.card.MaterialCardView
+            style="@style/Atlas.Card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            app:cardBackgroundColor="@color/surface_card"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="0dp"
-            app:strokeColor="@color/surface_card_stroke"
-            app:strokeWidth="1dp">
+            android:layout_marginTop="22dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -220,56 +62,6 @@
                 android:orientation="vertical"
                 android:padding="18dp">
 
-                <!-- Objetivo: toda la fila abre el BottomSheet de metas -->
-                <LinearLayout
-                    android:id="@+id/rowProfileGoal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackground"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/profile_goal_label"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/profile_edit_hint"
-                            android:textColor="@color/text_muted"
-                            android:textSize="11sp" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/tvProfileGoal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/bg_chip_orange"
-                        android:paddingHorizontal="14dp"
-                        android:paddingVertical="6dp"
-                        android:textColor="@color/accent_orange"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
-                        tools:text="Hipertrofia" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginVertical="16dp"
-                    android:background="@color/surface_card_stroke" />
-
-                <!-- Nivel -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -277,23 +69,97 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        style="@style/Atlas.Text.CardTitle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/profile_level_label"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="14sp" />
+                        android:text="@string/profile_level_label" />
 
                     <TextView
                         android:id="@+id/tvProfileLevel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/profile_level_value"
-                        android:textColor="@color/text_primary"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
+                        android:background="@drawable/bg_chip_orange"
+                        android:paddingHorizontal="12dp"
+                        android:paddingVertical="4dp"
+                        android:textColor="@color/accent_orange"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        tools:text="Intermedio" />
                 </LinearLayout>
+
+                <com.google.android.material.progressindicator.LinearProgressIndicator
+                    android:id="@+id/progressLevel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:indeterminate="false"
+                    android:max="100"
+                    app:indicatorColor="@color/accent_orange"
+                    app:trackColor="@color/surface_input"
+                    app:trackCornerRadius="4dp"
+                    app:trackThickness="8dp"
+                    tools:progress="40" />
+
+                <TextView
+                    android:id="@+id/tvLevelDetail"
+                    style="@style/Atlas.Text.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    tools:text="12 de 20 entrenamientos para Avanzado" />
             </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Peso, meta y racha -->
+        <LinearLayout
+            android:id="@+id/layoutProfileStats"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="-4dp"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal" />
+
+        <!-- Mi plan -->
+        <TextView
+            style="@style/Atlas.Text.Section"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:text="@string/profile_plan_title" />
+
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Atlas.Card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <LinearLayout
+                android:id="@+id/layoutPlanRows"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Cuenta -->
+        <TextView
+            style="@style/Atlas.Text.Section"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:text="@string/profile_account_title" />
+
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Atlas.Card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <LinearLayout
+                android:id="@+id/layoutAccountRows"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
         </com.google.android.material.card.MaterialCardView>
 
         <!-- Cerrar sesión -->
@@ -302,7 +168,7 @@
             style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="match_parent"
             android:layout_height="54dp"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="26dp"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:text="@string/profile_logout"

@@ -2,194 +2,96 @@ package com.proyecto.atlas.data
 
 import android.content.Context
 import android.content.SharedPreferences
-import org.json.JSONArray
-import org.json.JSONObject
-import java.util.Calendar
-import java.util.Locale
+import com.proyecto.atlas.util.DateUtils
 
 /**
- * Repositorio de métricas diarias: peso corporal e hidratación.
- * El estado se persiste en SharedPreferences, así que sobrevive al cierre de la app.
- *
- * La app arranca sin datos: el historial nace vacío y el contador de agua en cero.
+ * Fachada de métricas para las pantallas. Todo lo que depende de fechas (racha, meta semanal,
+ * total, agua de hoy) se calcula en el momento, así que se "reinicia" solo al cambiar de día
+ * o de semana. Los datos están separados por usuario.
  */
 object MetricsRepository {
 
-    /** Meta semanal de entrenamientos. */
-    const val META_SEMANAL = 4
+    /** Meta semanal de entrenamientos por defecto (editable desde Perfil). */
+    const val DEFAULT_WEEKLY_GOAL = 4
+
+    /** Vasos de agua diarios recomendados. */
+    const val WATER_GOAL = 8
 
     /** Objetivos fitness disponibles para el perfil. */
     val GOALS = listOf("Hipertrofia", "Fuerza", "Pérdida de Grasa")
 
-    /** Entrenamientos completados en total. */
-    var totalEntrenamientos: Int = 0
-        private set
-
-    /** Días consecutivos entrenando; la comparten Inicio y Perfil. */
-    var rachaDias: Int = 0
-        private set
-
-    /** Entrenamientos completados esta semana. */
-    var entrenamientosSemana: Int = 0
-        private set
-
     private var prefs: SharedPreferences? = null
 
-    /** Último peso registrado; 0.0 significa que todavía no hay ninguno. */
-    var pesoActual: Double = 0.0
-        private set
-
-    var vasosAgua: Int = 0
-        private set
-
-    private val historialPesos: MutableList<Pair<String, Double>> = mutableListOf()
-
-    /** Fecha (yyyy-MM-dd) del último entrenamiento guardado; vacía si no hay ninguno. */
-    private var ultimoEntrenamiento: String = ""
-
-    /** Lo invoca AtlasApp al arrancar. Restaura lo guardado en la sesión anterior. */
     fun init(context: Context) {
         if (prefs != null) return
-
-        val preferences = context.applicationContext
-            .getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        prefs = preferences
-
-        vasosAgua = preferences.getInt(KEY_WATER, 0)
-        pesoActual = preferences.getFloat(KEY_WEIGHT, 0f).toDouble()
-        totalEntrenamientos = preferences.getInt(KEY_TOTAL_WORKOUTS, 0)
-        rachaDias = preferences.getInt(KEY_STREAK, 0)
-        entrenamientosSemana = preferences.getInt(KEY_WEEK_WORKOUTS, 0)
-        ultimoEntrenamiento = preferences.getString(KEY_LAST_WORKOUT, "").orEmpty()
-
-        preferences.getString(KEY_HISTORY, null)?.let { raw ->
-            historialPesos.addAll(parseHistory(raw))
-        }
+        prefs = context.applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     }
 
-    /**
-     * Registra un entrenamiento terminado: suma al total y a la semana, y actualiza
-     * la racha según el calendario — varias sesiones el mismo día cuentan como un
-     * solo día de racha, y un día sin entrenar la reinicia.
-     */
-    fun incrementWorkouts() {
-        val today = todayKey()
+    // --- Entrenamientos (derivados del historial) ---
 
-        totalEntrenamientos++
-        entrenamientosSemana++
+    val totalEntrenamientos: Int get() = WorkoutLogRepository.total()
+    val rachaDias: Int get() = WorkoutLogRepository.streak()
+    val entrenamientosSemana: Int get() = WorkoutLogRepository.thisWeekCount()
 
-        rachaDias = when (ultimoEntrenamiento) {
-            today -> rachaDias.coerceAtLeast(1)
-            yesterdayKey() -> rachaDias + 1
-            else -> 1
+    var metaSemanal: Int
+        get() = prefs?.getInt(KEY_WEEKLY_GOAL + UserScope.id(), DEFAULT_WEEKLY_GOAL)
+            ?: DEFAULT_WEEKLY_GOAL
+        set(value) {
+            prefs?.edit()?.putInt(KEY_WEEKLY_GOAL + UserScope.id(), value.coerceIn(1, 7))?.apply()
         }
-        ultimoEntrenamiento = today
 
-        prefs?.edit()
-            ?.putInt(KEY_TOTAL_WORKOUTS, totalEntrenamientos)
-            ?.putInt(KEY_WEEK_WORKOUTS, entrenamientosSemana)
-            ?.putInt(KEY_STREAK, rachaDias)
-            ?.putString(KEY_LAST_WORKOUT, ultimoEntrenamiento)
-            ?.apply()
+    // --- Agua (solo cuenta el día de hoy) ---
+
+    val vasosAgua: Int
+        get() {
+            val raw = prefs?.getString(KEY_WATER + UserScope.id(), null) ?: return 0
+            val parts = raw.split("|")
+            return if (parts.size == 2 && parts[0] == DateUtils.today()) {
+                parts[1].toIntOrNull() ?: 0
+            } else {
+                0
+            }
+        }
+
+    fun incrementWater(): Int = setWater(vasosAgua + 1)
+
+    fun decrementWater(): Int = setWater((vasosAgua - 1).coerceAtLeast(0))
+
+    private fun setWater(glasses: Int): Int {
+        prefs?.edit()?.putString(KEY_WATER + UserScope.id(), "${DateUtils.today()}|$glasses")?.apply()
+        return glasses
     }
 
-    private fun todayKey(): String = dateKey(Calendar.getInstance())
+    // --- Peso ---
 
-    private fun yesterdayKey(): String = dateKey(
-        Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, -1) }
-    )
-
-    private fun dateKey(calendar: Calendar): String = String.format(
-        Locale.US,
-        "%04d-%02d-%02d",
-        calendar.get(Calendar.YEAR),
-        calendar.get(Calendar.MONTH) + 1,
-        calendar.get(Calendar.DAY_OF_MONTH)
-    )
-
-    /**
-     * Peso de partida para la pantalla de Progreso: el último registrado, o el del
-     * perfil del usuario autenticado si aún no ha guardado ninguno.
-     */
+    /** Último peso registrado o, si no hay, el peso con el que se creó la cuenta. */
     fun getPesoBase(): Double =
-        if (pesoActual > 0.0) pesoActual else AuthRepository.getCurrentUser()?.weight ?: 0.0
+        BodyRepository.latestWeight() ?: AuthRepository.getCurrentUser()?.weight ?: 0.0
 
-    /** Registra el peso del día: actualiza el valor actual y la entrada "Hoy" del historial. */
-    fun updateWeight(nuevoPeso: Double) {
-        pesoActual = nuevoPeso
+    // --- Nivel del atleta ---
 
-        val todayIndex = historialPesos.indexOfFirst { it.first == TODAY_LABEL }
-        if (todayIndex >= 0) {
-            historialPesos[todayIndex] = TODAY_LABEL to nuevoPeso
-        } else {
-            historialPesos.add(0, TODAY_LABEL to nuevoPeso)
-        }
+    data class LevelInfo(
+        val name: String,
+        val workoutsInLevel: Int,
+        val workoutsForNext: Int?,
+        val nextName: String?
+    )
 
-        persistWeight()
-        persistHistory()
+    /** Nivel calculado con los entrenamientos totales. */
+    fun level(): LevelInfo {
+        val total = totalEntrenamientos
+        val tiers = listOf(0 to "Principiante", 10 to "Intermedio", 30 to "Avanzado", 75 to "Élite")
+        val currentIndex = tiers.indexOfLast { total >= it.first }
+        val next = tiers.getOrNull(currentIndex + 1)
+        return LevelInfo(
+            name = tiers[currentIndex].second,
+            workoutsInLevel = total - tiers[currentIndex].first,
+            workoutsForNext = next?.let { it.first - tiers[currentIndex].first },
+            nextName = next?.second
+        )
     }
 
-    /** Suma un vaso de agua. Devuelve el total vigente. */
-    fun incrementWater(): Int {
-        vasosAgua++
-        persistWater()
-        return vasosAgua
-    }
-
-    /** Resta un vaso de agua sin bajar de cero. Devuelve el total vigente. */
-    fun decrementWater(): Int {
-        if (vasosAgua > 0) {
-            vasosAgua--
-            persistWater()
-        }
-        return vasosAgua
-    }
-
-    /** Historial de pesajes, del más reciente al más antiguo. */
-    fun getWeightHistory(): List<Pair<String, Double>> = historialPesos.toList()
-
-    // --- Persistencia ---
-
-    private fun persistWater() {
-        prefs?.edit()?.putInt(KEY_WATER, vasosAgua)?.apply()
-    }
-
-    private fun persistWeight() {
-        prefs?.edit()?.putFloat(KEY_WEIGHT, pesoActual.toFloat())?.apply()
-    }
-
-    private fun persistHistory() {
-        val array = JSONArray()
-        historialPesos.forEach { (date, weightKg) ->
-            array.put(
-                JSONObject().apply {
-                    put(FIELD_DATE, date)
-                    put(FIELD_WEIGHT, weightKg)
-                }
-            )
-        }
-        prefs?.edit()?.putString(KEY_HISTORY, array.toString())?.apply()
-    }
-
-    private fun parseHistory(raw: String): List<Pair<String, Double>> = runCatching {
-        val array = JSONArray(raw)
-        (0 until array.length()).map { index ->
-            val json = array.getJSONObject(index)
-            json.getString(FIELD_DATE) to json.getDouble(FIELD_WEIGHT)
-        }
-    }.getOrDefault(emptyList())
-
-    private const val TODAY_LABEL = "Hoy"
-
-    private const val PREFS_NAME = "atlas_metrics_prefs"
-    private const val KEY_WATER = "vasos_agua"
-    private const val KEY_WEIGHT = "peso_actual"
-    private const val KEY_HISTORY = "historial_pesos"
-    private const val KEY_TOTAL_WORKOUTS = "total_entrenamientos"
-    private const val KEY_WEEK_WORKOUTS = "entrenamientos_semana"
-    private const val KEY_STREAK = "racha_dias"
-    private const val KEY_LAST_WORKOUT = "ultimo_entrenamiento"
-
-    private const val FIELD_DATE = "date"
-    private const val FIELD_WEIGHT = "weight"
+    private const val PREFS_NAME = "atlas_metrics_v2_prefs"
+    private const val KEY_WEEKLY_GOAL = "weekly_goal_"
+    private const val KEY_WATER = "water_"
 }

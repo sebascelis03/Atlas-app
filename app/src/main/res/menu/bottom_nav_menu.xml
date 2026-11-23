@@ -12,6 +12,11 @@
         android:title="@string/nav_routines" />
 
     <item
+        android:id="@+id/nav_measures"
+        android:icon="@drawable/ic_ruler"
+        android:title="@string/nav_measures" />
+
+    <item
         android:id="@+id/nav_progress"
         android:icon="@drawable/ic_bar_chart"
         android:title="@string/nav_progress" />

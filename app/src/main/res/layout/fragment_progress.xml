@@ -14,27 +14,80 @@
         android:orientation="vertical"
         android:paddingHorizontal="20dp"
         android:paddingTop="24dp"
-        android:paddingBottom="24dp">
+        android:paddingBottom="28dp">
 
         <TextView
             android:id="@+id/tvProgressTitle"
+            style="@style/Atlas.Text.Screen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/progress_title"
-            android:textColor="@color/text_primary"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+            android:text="@string/progress_title" />
 
-        <!-- Tarjeta 1: Registro de peso -->
-        <com.google.android.material.card.MaterialCardView
+        <TextView
+            style="@style/Atlas.Text.Body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="@string/progress_subtitle" />
+
+        <!-- Periodo -->
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupRange"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            app:cardBackgroundColor="@color/surface_card"
-            app:cardCornerRadius="18dp"
-            app:cardElevation="0dp"
-            app:strokeColor="@color/surface_card_stroke"
-            app:strokeWidth="1dp">
+            android:layout_marginTop="14dp"
+            app:chipSpacingHorizontal="8dp"
+            app:selectionRequired="true"
+            app:singleLine="true"
+            app:singleSelection="true">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipRange7"
+                style="@style/Atlas.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:checked="true"
+                android:text="@string/progress_range_7"
+                android:textSize="13sp"
+                app:chipMinHeight="38dp" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipRange30"
+                style="@style/Atlas.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="@string/progress_range_30"
+                android:textSize="13sp"
+                app:chipMinHeight="38dp" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipRange90"
+                style="@style/Atlas.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:text="@string/progress_range_90"
+                android:textSize="13sp"
+                app:chipMinHeight="38dp" />
+        </com.google.android.material.chip.ChipGroup>
+
+        <!-- Resumen del periodo -->
+        <LinearLayout
+            android:id="@+id/layoutProgressTiles"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="-4dp"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal" />
+
+        <!-- Entrenamientos -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Atlas.Card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -43,124 +96,33 @@
                 android:padding="18dp">
 
                 <TextView
+                    style="@style/Atlas.Text.CardTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/progress_weight_card_title"
-                    android:textColor="@color/text_primary"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:text="@string/progress_chart_sessions" />
 
                 <TextView
+                    android:id="@+id/tvChartSubtitle"
+                    style="@style/Atlas.Text.Caption"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:text="@string/progress_weight_card_subtitle"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="13sp" />
+                    android:layout_marginTop="1dp"
+                    tools:text="Por día, últimos 7 días" />
 
-                <!-- Ajuste rápido del peso -->
-                <LinearLayout
+                <com.proyecto.atlas.ui.BarChartView
+                    android:id="@+id/chartSessions"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnMinusWeight"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="44dp"
-                        android:insetTop="0dp"
-                        android:insetBottom="0dp"
-                        android:minWidth="0dp"
-                        android:paddingHorizontal="14dp"
-                        android:text="@string/progress_weight_minus"
-                        android:textColor="@color/text_primary"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        app:cornerRadius="22dp"
-                        app:strokeColor="@color/surface_card_stroke" />
-
-                    <!-- Clicable: abre el diálogo para escribir el peso exacto -->
-                    <TextView
-                        android:id="@+id/tvCurrentWeight"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="?attr/selectableItemBackground"
-                        android:gravity="center"
-                        android:paddingVertical="4dp"
-                        android:textColor="@color/text_primary"
-                        android:textSize="32sp"
-                        android:textStyle="bold"
-                        tools:text="74.8 kg" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnPlusWeight"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="44dp"
-                        android:insetTop="0dp"
-                        android:insetBottom="0dp"
-                        android:minWidth="0dp"
-                        android:paddingHorizontal="14dp"
-                        android:text="@string/progress_weight_plus"
-                        android:textColor="@color/text_primary"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        app:cornerRadius="22dp"
-                        app:strokeColor="@color/surface_card_stroke" />
-                </LinearLayout>
-
-                <!-- Mensaje dinámico de distancia a la meta -->
-                <TextView
-                    android:id="@+id/tvWeightToGoal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:gravity="center"
-                    android:textColor="@color/accent_orange"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    tools:text="Estás a 4.8 kg de tu meta" />
-
-                <TextView
-                    android:id="@+id/tvWeightEditHint"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:gravity="center"
-                    android:text="@string/profile_edit_hint"
-                    android:textColor="@color/text_muted"
-                    android:textSize="11sp" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnSaveWeight"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="16dp"
-                    android:insetTop="0dp"
-                    android:insetBottom="0dp"
-                    android:text="@string/progress_save_weight"
-                    android:textColor="@color/white"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    app:backgroundTint="@color/accent_orange"
-                    app:cornerRadius="14dp" />
+                    android:layout_height="180dp"
+                    android:layout_marginTop="10dp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Tarjeta 2: Hidratación -->
+        <!-- Tendencia de peso -->
         <com.google.android.material.card.MaterialCardView
+            style="@style/Atlas.Card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:cardBackgroundColor="@color/surface_card"
-            app:cardCornerRadius="18dp"
-            app:cardElevation="0dp"
-            app:strokeColor="@color/surface_card_stroke"
-            app:strokeWidth="1dp">
+            android:layout_marginTop="14dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -168,85 +130,59 @@
                 android:orientation="vertical"
                 android:padding="18dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/progress_water_card_title"
-                    android:textColor="@color/text_primary"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:text="@string/progress_water_card_subtitle"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="13sp" />
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnMinusWater"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
-                        android:layout_width="46dp"
-                        android:layout_height="46dp"
-                        android:insetTop="0dp"
-                        android:insetBottom="0dp"
-                        android:minWidth="0dp"
-                        android:paddingHorizontal="0dp"
-                        android:text="@string/progress_water_minus"
-                        android:textColor="@color/accent_cyan"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        app:cornerRadius="23dp"
-                        app:strokeColor="@color/surface_card_stroke" />
-
-                    <TextView
-                        android:id="@+id/tvWaterCount"
+                    <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:gravity="center"
-                        android:textColor="@color/accent_cyan"
-                        android:textSize="24sp"
-                        android:textStyle="bold"
-                        tools:text="0 vasos" />
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/Atlas.Text.CardTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/progress_chart_weight" />
+
+                        <TextView
+                            android:id="@+id/tvWeightSummary"
+                            style="@style/Atlas.Text.Caption"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="1dp"
+                            tools:text="74.8 kg • -1.2 kg en el periodo" />
+                    </LinearLayout>
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnPlusWater"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
-                        android:layout_width="46dp"
-                        android:layout_height="46dp"
-                        android:insetTop="0dp"
-                        android:insetBottom="0dp"
+                        android:id="@+id/btnGoMeasures"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
                         android:minWidth="0dp"
-                        android:paddingHorizontal="0dp"
-                        android:text="@string/progress_water_plus"
-                        android:textColor="@color/accent_cyan"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        app:cornerRadius="23dp"
-                        app:strokeColor="@color/surface_card_stroke" />
+                        android:text="@string/progress_go_measures"
+                        android:textColor="@color/accent_orange"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
+
+                <com.proyecto.atlas.ui.LineChartView
+                    android:id="@+id/chartWeightTrend"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_marginTop="8dp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Tarjeta 3: Historial reciente -->
+        <!-- Calendario de actividad -->
         <com.google.android.material.card.MaterialCardView
+            style="@style/Atlas.Card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:cardBackgroundColor="@color/surface_card"
-            app:cardCornerRadius="18dp"
-            app:cardElevation="0dp"
-            app:strokeColor="@color/surface_card_stroke"
-            app:strokeWidth="1dp">
+            android:layout_marginTop="14dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -255,32 +191,97 @@
                 android:padding="18dp">
 
                 <TextView
+                    style="@style/Atlas.Text.CardTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/progress_history_card_title"
-                    android:textColor="@color/text_primary"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:text="@string/progress_calendar_title" />
 
-                <LinearLayout
-                    android:id="@+id/layoutWeightHistory"
+                <TextView
+                    style="@style/Atlas.Text.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:text="@string/progress_calendar_subtitle" />
+
+                <com.proyecto.atlas.ui.ActivityCalendarView
+                    android:id="@+id/calendarActivity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
+                    android:layout_marginTop="12dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Récords -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Atlas.Card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="18dp">
+
+                <TextView
+                    style="@style/Atlas.Text.CardTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/progress_records_title" />
+
+                <LinearLayout
+                    android:id="@+id/layoutRecords"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
                     android:orientation="vertical" />
 
-                <!-- Estado vacío: aún no hay pesajes guardados -->
                 <TextView
-                    android:id="@+id/tvHistoryEmpty"
+                    android:id="@+id/tvRecordsEmpty"
+                    style="@style/Atlas.Text.Body"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:lineSpacingExtra="2dp"
-                    android:text="@string/progress_history_empty"
-                    android:textColor="@color/text_muted"
-                    android:textSize="13sp"
-                    android:visibility="gone"
-                    tools:visibility="visible" />
+                    android:layout_marginTop="8dp"
+                    android:text="@string/progress_records_empty"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Últimas sesiones -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Atlas.Card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="18dp">
+
+                <TextView
+                    style="@style/Atlas.Text.CardTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/progress_sessions_title" />
+
+                <LinearLayout
+                    android:id="@+id/layoutSessions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:orientation="vertical" />
+
+                <TextView
+                    android:id="@+id/tvSessionsEmpty"
+                    style="@style/Atlas.Text.Body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/progress_sessions_empty"
+                    android:visibility="gone" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
