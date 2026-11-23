@@ -4,24 +4,27 @@
  *   con menú desplegable (Configuración de cuenta, Preferencias y Cerrar sesión).
  * - Área Principal de 3 Pestañas (Inicio, Rutinas, Dashboard) que permanecen montadas en el DOM
  *   para conservar la posición de scroll al alternar entre ellas.
- * - Barra de Navegación Inferior fija con las 3 pestañas oficiales.
+ * - Transición limpia hacia el Motor de Sesión en Vivo (`WorkoutLiveScreen`) al iniciar
+ *   cualquier bloque guardado o al pulsar "Iniciar rutina improvisada".
  */
 
-import {
-  AuthService,
-  BlockService,
-  ExerciseCatalog,
-  WorkoutService,
-} from '../services/index.js';
+import { AuthService } from '../services/index.js';
 import { icon } from '../ui/icons.js';
-import { showToast } from '../ui/modals.js';
 import {
   closeProfileDropdown,
   toggleProfileDropdown,
 } from './ProfileMenuModal.js';
+import {
+  drawDashboardCharts,
+  renderDashboardTab,
+} from './tabs/DashboardTab.js';
 import { renderHomeTab } from './tabs/HomeTab.js';
+import { renderRoutinesTab } from './tabs/RoutinesTab.js';
+import { renderWorkoutLiveScreen } from './WorkoutLiveScreen.js';
 
 let activeTab = 'home'; // 'home' | 'routines' | 'dashboard'
+let activeLiveWorkoutConfig = null; // null | { isImprovised: boolean, block: object | null }
+
 const tabScrollPositions = {
   home: 0,
   routines: 0,
@@ -47,32 +50,48 @@ export function selectTab(nextTab) {
     btn.classList.toggle('bottom-nav__item--active', id === activeTab);
   });
 
+  if (activeTab === 'dashboard') {
+    const dashPanel = document.querySelector('#tabPanelDashboard');
+    if (dashPanel) {
+      requestAnimationFrame(() => drawDashboardCharts(dashPanel));
+    }
+  }
+
   window.scrollTo(0, tabScrollPositions[activeTab] || 0);
 }
 
 /**
- * Renderiza el contenedor autenticado de ATLAS con su Header, Menú de Perfil y 3 Pestañas.
+ * Renderiza el contenedor autenticado de ATLAS (o la Sesión en Vivo si hay un entrenamiento activo).
  * @param {HTMLElement} container
- * @param {{
- *   onLoggedOut: () => void,
- *   onStartWorkout?: (config: { isImprovised: boolean, block: object | null }) => void
- * }} callbacks
+ * @param {{ onLoggedOut: () => void }} callbacks
  */
-export function renderAppShell(container, { onLoggedOut, onStartWorkout }) {
+export function renderAppShell(container, { onLoggedOut }) {
   closeProfileDropdown();
 
   const user = AuthService.getCurrentUser();
   if (!user) {
+    activeLiveWorkoutConfig = null;
     onLoggedOut();
+    return;
+  }
+
+  // Si hay una sesión de entrenamiento en curso, mostrar el Motor de Sesión en Vivo
+  if (activeLiveWorkoutConfig) {
+    renderWorkoutLiveScreen(container, {
+      isImprovised: Boolean(activeLiveWorkoutConfig.isImprovised),
+      block: activeLiveWorkoutConfig.block || null,
+      onFinished: () => {
+        activeLiveWorkoutConfig = null;
+        activeTab = 'home';
+        renderAppShell(container, { onLoggedOut });
+        window.scrollTo(0, 0);
+      },
+    });
     return;
   }
 
   const fullName = AuthService.getFullName(user);
   const initial = fullName.charAt(0).toUpperCase();
-  const blocks = BlockService.getAllBlocks();
-  const customExercises = ExerciseCatalog.getCustomExercises();
-  const totalWorkouts = WorkoutService.getTotalWorkouts();
-  const streak = WorkoutService.getStreakDays();
 
   container.innerHTML = `
     <!-- Header Superior Fijo (Logo ATLAS + Menú de Perfil) -->
@@ -96,7 +115,7 @@ export function renderAppShell(container, { onLoggedOut, onStartWorkout }) {
 
     <!-- Área Central con los 3 Paneles de Pestañas Preservados -->
     <main class="app-main">
-      <!-- PESTAÑA 1: INICIO (Montada dinámicamente por HomeTab.js) -->
+      <!-- PESTAÑA 1: INICIO (HomeTab.js) -->
       <section
         id="tabPanelHome"
         class="tab-panel"
@@ -104,83 +123,21 @@ export function renderAppShell(container, { onLoggedOut, onStartWorkout }) {
         ${activeTab !== 'home' ? 'hidden' : ''}
       ></section>
 
-      <!-- PESTAÑA 2: RUTINAS (BLOQUES) — Se completa en Plan #8 -->
+      <!-- PESTAÑA 2: RUTINAS / BLOQUES (RoutinesTab.js) -->
       <section
         id="tabPanelRoutines"
         class="tab-panel"
         data-tab-panel="routines"
         ${activeTab !== 'routines' ? 'hidden' : ''}
-      >
-        <div style="display:flex;align-items:center;justify-content:space-between;">
-          <div>
-            <h1 class="text-screen">Rutinas</h1>
-            <p class="text-body">${blocks.length} bloques · ${customExercises.length} ejercicios propios</p>
-          </div>
-        </div>
+      ></section>
 
-        <div class="card" style="display:flex;flex-direction:column;gap:8px;">
-          <h2 class="text-section">Bloques Configurados</h2>
-          <p class="text-body">
-            El gestor completo de bloques, creación de ejercicios propios y sesión en vivo se conectará en el <b>Plan #8</b>.
-          </p>
-          <div style="display:flex;flex-direction:column;gap:10px;margin-top:6px;">
-            ${blocks
-              .map(
-                (b) => `
-                <div class="card-routine">
-                  <div class="card-routine__accent"></div>
-                  <div class="card-routine__body">
-                    <div>
-                      <h3 class="text-section">${b.title}</h3>
-                      <p class="text-body">${b.muscleGroups}</p>
-                      <span class="pill" style="margin-top:8px;">${b.exerciseCount} ejercicios • ${b.estimatedMinutes} min</span>
-                    </div>
-                  </div>
-                </div>
-              `
-              )
-              .join('')}
-          </div>
-        </div>
-      </section>
-
-      <!-- PESTAÑA 3: DASHBOARD — Se completa en Plan #9 -->
+      <!-- PESTAÑA 3: DASHBOARD (DashboardTab.js) -->
       <section
         id="tabPanelDashboard"
         class="tab-panel"
         data-tab-panel="dashboard"
         ${activeTab !== 'dashboard' ? 'hidden' : ''}
-      >
-        <div>
-          <h1 class="text-screen">Dashboard</h1>
-          <p class="text-body">Estadísticas, gráficas Canvas e historial</p>
-        </div>
-
-        <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:8px;">
-          <div class="tile">
-            <span style="color:var(--accent-orange);display:flex;">${icon('ic_flame', { size: 20 })}</span>
-            <p class="text-value" style="margin-top:10px;">${streak} d</p>
-            <p class="text-caption">Racha</p>
-          </div>
-          <div class="tile">
-            <span style="color:var(--group-core);display:flex;">${icon('ic_bolt', { size: 20 })}</span>
-            <p class="text-value" style="margin-top:10px;">${WorkoutService.getThisWeekVolume()} kg</p>
-            <p class="text-caption">Semanal</p>
-          </div>
-          <div class="tile">
-            <span style="color:var(--primary-neon);display:flex;">${icon('ic_trophy', { size: 20 })}</span>
-            <p class="text-value" style="margin-top:10px;">${totalWorkouts}</p>
-            <p class="text-caption">Sesiones</p>
-          </div>
-        </div>
-
-        <div class="card">
-          <h2 class="text-section">Panel Estadístico</h2>
-          <p class="text-body" style="margin-top:4px;">
-            Las gráficas Canvas 2D (volumen, entrenamientos, evolución de peso y calendario de actividad) se conectarán en el <b>Plan #9</b>.
-          </p>
-        </div>
-      </section>
+      ></section>
     </main>
 
     <!-- Barra de Navegación Inferior (3 Pestañas Oficiales) -->
@@ -214,30 +171,62 @@ export function renderAppShell(container, { onLoggedOut, onStartWorkout }) {
     </nav>
   `;
 
-  const refreshShell = () =>
-    renderAppShell(container, { onLoggedOut, onStartWorkout });
+  const refreshShell = () => renderAppShell(container, { onLoggedOut });
 
   const handleStartWorkout = (workoutConfig) => {
-    if (typeof onStartWorkout === 'function') {
-      onStartWorkout(workoutConfig);
-    } else {
-      const label = workoutConfig?.isImprovised
-        ? 'Rutina Improvisada'
-        : workoutConfig?.block?.title || 'Entrenamiento';
-      showToast(`Iniciando: ${label} (Motor en vivo en Plan #8)`, {
-        type: 'info',
+    activeLiveWorkoutConfig = workoutConfig || {
+      isImprovised: true,
+      block: null,
+    };
+    renderAppShell(container, { onLoggedOut });
+    window.scrollTo(0, 0);
+  };
+
+  const homePanel = container.querySelector('#tabPanelHome');
+  const routinesPanel = container.querySelector('#tabPanelRoutines');
+  const dashboardPanel = container.querySelector('#tabPanelDashboard');
+
+  const mountDashboard = () => {
+    if (dashboardPanel) {
+      renderDashboardTab(dashboardPanel, {
+        onWeightUpdated: () => mountHome(),
       });
     }
   };
 
-  // Montar Pestaña 1 — Inicio
-  const homePanel = container.querySelector('#tabPanelHome');
-  if (homePanel) {
-    renderHomeTab(homePanel, {
-      onNavigateTab: (tabId) => selectTab(tabId),
-      onStartWorkout: handleStartWorkout,
-    });
-  }
+  const mountHome = () => {
+    if (homePanel) {
+      renderHomeTab(homePanel, {
+        onNavigateTab: (tabId) => selectTab(tabId),
+        onStartWorkout: handleStartWorkout,
+      });
+    }
+    if (dashboardPanel) {
+      renderDashboardTab(dashboardPanel, {
+        onWeightUpdated: () => {
+          if (homePanel) {
+            renderHomeTab(homePanel, {
+              onNavigateTab: (tabId) => selectTab(tabId),
+              onStartWorkout: handleStartWorkout,
+            });
+          }
+        },
+      });
+    }
+  };
+
+  const mountRoutines = () => {
+    if (routinesPanel) {
+      renderRoutinesTab(routinesPanel, {
+        onStartWorkout: handleStartWorkout,
+        onBlocksChanged: mountHome,
+      });
+    }
+  };
+
+  mountHome();
+  mountRoutines();
+  mountDashboard();
 
   // Botón de perfil en la esquina superior derecha
   container.querySelector('#btnHeaderProfile')?.addEventListener('click', () => {

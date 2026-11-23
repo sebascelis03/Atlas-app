@@ -135,3 +135,67 @@ Con la Portada y el sistema de modales funcionando, se ejecutó el **Plan de Imp
 
 ### 4. Errores o Inconvenientes
 * Ninguno; `npm run build` compiló todos los módulos sin errores.
+
+---
+
+## Iteración #08 — 23 de noviembre de 2026: Pestaña 2 — Rutinas (Bloques), Creación de Ejercicios Propios y Motor de Sesión en Vivo (Resolución de H-03)
+
+### 1. Contexto
+Con la Pestaña 1 (Inicio) terminada, se ejecutó el **Plan de Implementación #8** para construir la **Pestaña 2 — Rutinas (Bloques)**, el flujo de **Creación de Ejercicios Propios** y el **Motor de Sesión en Vivo (`WorkoutLiveScreen.js`)**, resolviendo además el último hallazgo técnico pendiente (**H-03**).
+
+### 2. Decisiones Tomadas y Resolución de H-03
+* **ADR-023 / Resolución de H-03 (Alarma Sutil Sintetizada en `src/core/alarm.js` + Temporizadores por Marca de Tiempo Real):**
+  * Se implementó `playSubtleRestAlarm()` utilizando **Web Audio API** (`AudioContext`) para sintetizar un acorde armónico suave de dos notas (`528 Hz` y `660 Hz` con envolvente exponencial) sin archivos de audio externos, combinado con `navigator.vibrate([160, 80, 220])`, respetando los interruptores de *Preferencias* (`soundEnabled`, `vibrationEnabled`).
+  * Tanto el cronómetro de sesión como el temporizador de descanso calculan el tiempo transcurrido/restante por diferencia de marcas de tiempo (`Date.now() - startTimeMs` y `restEndTimeMs - Date.now()`), garantizando exactitud total aunque el navegador o el WebView pasen a segundo plano durante el descanso.
+* **ADR-024 (Bloques de Nombre Libre y Creación de Ejercicios Propios Integrada):** En `src/screens/tabs/RoutinesTab.js`, el usuario puede crear bloques con nombre libre sin días fijos, filtrarlos por grupo muscular y registrar en cualquier momento ejercicios propios personalizados (`openCreateCustomExerciseDialog`), que quedan disponibles tanto en los bloques como en el buscador en vivo.
+* **ADR-025 (Motor de Sesión en Vivo Flexible `src/screens/WorkoutLiveScreen.js`):** Soporta sesiones iniciadas desde un bloque o desde **"Iniciar rutina improvisada"**, permite **cambiar cualquier ejercicio por otro sobre la marcha** (`Cambiar`), ajustar el tiempo de descanso programado en caliente (`⏱ 90s`), y ofrece en el diálogo de cierre la opción de **"Finalizar antes y guardar avance"** para no perder ninguna serie registrada.
+
+### 3. Lo que se Hizo
+* Creación de `src/core/alarm.js` y `src/screens/tabs/RoutinesTab.js`.
+* Creación de `src/screens/WorkoutLiveScreen.js`.
+* Ampliación de `src/styles/atlas.css` y conexión en `src/screens/AppShell.js`.
+
+### 4. Errores o Inconvenientes
+* Ninguno; `npm run build` compiló todos los módulos sin errores.
+
+---
+
+## Iteración #09 — 23 de noviembre de 2026: Motor de Gráficas Canvas 2D (`src/ui/charts.js`) y Pestaña 3 — Dashboard (`src/screens/tabs/DashboardTab.js`)
+
+### 1. Contexto
+Con las pestañas de Inicio y Rutinas/Sesión en Vivo terminadas, se ejecutó el **Plan de Implementación #9** para construir el motor de gráficas propias en HTML5 Canvas 2D y la **Pestaña 3 — Dashboard** completa.
+
+### 2. Decisiones Tomadas
+* **ADR-026 (Motor de Gráficas Propias en Canvas 2D con Soporte Multi-Tema `src/ui/charts.js`):** Se implementaron `drawBarChart`, `drawLineChart` y `drawActivityCalendar` sin librerías externas, respetando las proporciones y fórmulas matemáticas de `03_ESPECIFICACION_GRAFICAS_E_ICONOS.md`, escalando el buffer interno por `window.devicePixelRatio` y leyendo los tokens CSS activos con `getComputedStyle(document.documentElement)` para renderizar con nitidez tanto en Tema Oscuro como en Tema Claro.
+* **ADR-027 (Conmutador de Barras Sesiones vs. Volumen y Desglose de Historial en `DashboardTab.js`):** Además de los filtros de rango (`7 días`, `30 días`, `90 días`), la tarjeta de gráfica de barras permite alternar entre **Entrenamientos por periodo** y **Volumen levantado (`kg`) por periodo**. Asimismo, cada fila de **Últimas sesiones** es interactiva y abre un BottomSheet con el detalle completo de los ejercicios y series (`kg × reps`) registrados en esa sesión.
+* **ADR-028 (Redibujado Inteligente al Mostrar Pestaña):** Cuando el usuario cambia a la pestaña `Dashboard`, `selectTab('dashboard')` invoca `requestAnimationFrame(() => drawDashboardCharts(dashPanel))` una vez el panel deja de estar `hidden`, asegurando que `getBoundingClientRect()` obtenga el ancho real del contenedor.
+
+### 3. Lo que se Hizo
+* Creación de `src/ui/charts.js` y `src/screens/tabs/DashboardTab.js`.
+* Ampliación de `src/styles/atlas.css` y conexión final de las 3 pestañas en `src/screens/AppShell.js`.
+
+### 4. Errores o Inconvenientes
+* Ninguno; `npm run build` compiló la aplicación completa sin errores.
+
+---
+
+## Iteración #10 — 23 de noviembre de 2026: Integración de Capacitor Android y Automatización de Exportación `.apk`
+
+### 1. Contexto
+Con toda la aplicación en JavaScript y las 3 pestañas terminadas, se ejecutó el **Plan de Implementación #10** para añadir la plataforma nativa `@capacitor/android` (`com.proyecto.atlas`) y automatizar la exportación del archivo instalador `.apk` desde la terminal sin necesidad de abrir Android Studio.
+
+### 2. Decisiones Tomadas
+* **ADR-029 (Automatización de Compilación `.apk` por Consola `scripts/build-apk.ps1`):** Se creó el script automatizado invocado mediante `npm run build:apk`, que encadena:
+  1. `npm run build` (empaquetado de producción con Vite en `< 1s`).
+  2. `npx cap sync android` (copia de `dist/` y sincronización del plugin `@capacitor/filesystem`).
+  3. Configuración automática de `JAVA_HOME` apuntando al JDK de Android Studio (`C:\Program Files\Android\Android Studio\jbr`) y `ANDROID_HOME` apuntando al Android SDK local (`C:\Users\HP INC\AppData\Local\Android\Sdk`), generando `android/local.properties`.
+  4. Ejecución de `.\gradlew.bat assembleDebug` y copia automática del instalador resultante a **`ATLAS-debug.apk`** en la raíz del proyecto.
+
+### 3. Lo que se Hizo
+* Instalación de `@capacitor/android` (`^6.0.0`) y generación del directorio nativo `android/`.
+* Creación de `scripts/build-apk.ps1` y actualización de `package.json` y `README.md`.
+
+### 4. Errores Encontrados y Solución Aplicada
+* **Problema:** La plantilla por defecto de `@capacitor/android` genera `gradle-8.2.1-all.zip`, el cual falló inicialmente con `Unsupported class file major version 69` al ejecutarse con el JBR de Android Studio (OpenJDK `25.0.3`).
+* **Solución (ADR-030):** Se actualizó `android/gradle/wrapper/gradle-wrapper.properties` a **Gradle `8.10.2`** y se configuró `scripts/build-apk.ps1` para priorizar el **JDK 23** instalado en el sistema (`C:\Program Files\Java\jdk-23`), que es 100 % compatible con Gradle `8.10.2`.
+* **Resultado Verificado:** `BUILD SUCCESSFUL` (108 tareas ejecutadas) y archivo instalador exportado en **`c:\Users\HP INC\Desktop\ATLAS2\ATLAS-debug.apk` (`3.64 MB`)**.

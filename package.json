@@ -1,15 +1,18 @@
 {
   "name": "atlas-js",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "ATLAS - Fitness & Workout Tracker (JavaScript -> APK)",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "sync:android": "vite build && npx cap sync android",
+    "build:apk": "powershell -ExecutionPolicy Bypass -File ./scripts/build-apk.ps1"
   },
   "dependencies": {
+    "@capacitor/android": "^6.0.0",
     "@capacitor/core": "^6.0.0",
     "@capacitor/filesystem": "^6.0.0"
   },

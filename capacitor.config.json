@@ -1,5 +1,6 @@
 {
   "appId": "com.proyecto.atlas",
   "appName": "ATLAS",
-  "webDir": "dist"
+  "webDir": "dist",
+  "backgroundColor": "#0E1117"
 }
