@@ -49,3 +49,21 @@ Con la estética ya respaldada en `.docs/03_referencia_ui_android/`, el usuario 
 
 ### 5. Errores o Inconvenientes
 * Ninguno registrado al momento de cerrar la iteración.
+
+---
+
+## Iteración #03 — 22 de noviembre de 2026: Inicialización de la Base Limpia en JavaScript + Sistema de Diseño e Íconos
+
+### 1. Contexto
+Con el repositorio limpio y la definición funcional definitiva en `.docs/`, se ejecutó el **Plan de Implementación #3** para levantar la base técnica del proyecto en JavaScript.
+
+### 2. Decisiones Tomadas
+* **ADR-008 (Configuración de Vite con rutas relativas `base: "./"`):** Se configuró Vite para emitir activos con rutas relativas en `dist/`, requisito indispensable para que el `WebView` local de Capacitor en Android cargue los módulos ES y hojas de estilo sin errores de protocolo `file://` o `https://localhost`.
+* **ADR-009 (Variables CSS preparadas para multi-tema `data-theme="dark"`):** Los 27 tokens de color oficiales se declararon en `:root, :root[data-theme="dark"]` en `src/styles/atlas.css`, dejando listo el punto de extensión para cuando se defina la paleta del tema claro (**H-02** en el Plan #6).
+* **ADR-010 (Motor de Íconos SVG sin dependencias externas):** Los 21 íconos extraídos de Android Studio fueron encapsulados en `src/ui/icons.js` con soporte para trazos (`stroke`), rellenos (`fill`) y reglas `evenodd`, heredando el color mediante `currentColor`.
+
+### 3. Lo que se Hizo
+* Creación de `.gitignore`, `README.md`, `package.json`, `vite.config.js`, `capacitor.config.json` e `index.html`.
+* Creación del sistema de diseño completo en `src/styles/atlas.css`.
+* Creación del catálogo de 21 vectores en `src/ui/icons.js`.
+* Creación de la guía visual interactiva de verificación en `src/main.js`.
